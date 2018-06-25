@@ -55,6 +55,14 @@ void RaspiDebugPrint(int32_t value){
   if(dbgPrint == 1)
     tx_0.print(value);
 }
+void RaspiDebugPrint(COMValue& obj){
+  if(dbgPrint == 1){
+    tx_0.print(obj.Value());
+    tx_0.print(" ** ");
+    tx_0.print(obj.TimeStamp());
+  }
+}
+
 void RaspiPrintln(){
     tx_0.println();
 }
@@ -105,19 +113,27 @@ void RaspiDebugPrintln(int value){
     tx_0.println(value);
 }
 void RaspiPrintln(unsigned long value){
-    tx_0.print(value);
+    tx_0.println(value);
 }
 void RaspiDebugPrintln(unsigned long value){
   if(dbgPrint == 1)
-    tx_0.print(value);
+    tx_0.println(value);
 }
 void RaspiPrintln(int32_t value){
-    tx_0.print(value);
+    tx_0.println(value);
 }
 void RaspiDebugPrintln(int32_t value){
   if(dbgPrint == 1)
-    tx_0.print(value);
+    tx_0.println(value);
 }
+void RaspiDebugPrintln(COMValue& obj){
+  if(dbgPrint == 1){
+    tx_0.print(obj.Value());
+    tx_0.print(" ** ");
+    tx_0.println(obj.TimeStamp());
+  }
+}
+
 void sendValueToRaspi(String sensorID, float temp){
   RaspiPrint(sensorID); RaspiPrint("  "); RaspiPrintln(temp);
 }
@@ -148,6 +164,7 @@ void COM_0_resetBuffer(){
 #define RASPI 1
 #define DEBUG 2
 #define SET_NEW_SENSOR 2
+#define RUN_DESIGN_TEST 3
 
 void checkRaspiComm(){
 //**************************************************************************
@@ -155,6 +172,7 @@ void checkRaspiComm(){
 // Ex DebugPrint:   0xEE 0xFF 0x02 0x01  0x01  0xcc 0xcc  (RaspiDebugPrint)
 // Ex DebugPrint:   0xEE 0xFF 0x02 0x01  0x02  0xcc 0xcc  (DebugPrint)
 // Ex Set DallasID: 0xEE 0xFF 0x0A 0x02  DATA  0xcc 0xcc
+// Ex DebugPrint:   0xEE 0xFF 0x01 0x03        0xcc 0xcc  (run design tests)
 //
 // Dallas ID data layout
 // |Index|   Sensor ID                  
@@ -224,6 +242,8 @@ void checkRaspiComm(){
                 RaspiDebugPrintln(DATALENGTH);
               }
               break;
+            case RUN_DESIGN_TEST:
+              DESIGN_TEST = true;
             default:
               break;
           }

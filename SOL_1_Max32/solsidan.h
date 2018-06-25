@@ -1,6 +1,10 @@
+#include <Pipe.h>
+#include <COMValue.h>
 // 
 //  Konstanter och globala variabler f�r Johans solsystem
 //
+
+bool DESIGN_TEST = false;
 
 // Dallas 1-wire adresser == Index i DallasNetwork[]
 #define _TKA   0      // Värmevatten inne i acktanken (dykr�r mellan solslinga in/ut)
@@ -82,9 +86,9 @@ volatile unsigned long currentFlowCount_FSOL;
 // Kommunikation med taket
 //----------------------------------------
 
-float COM_1_TV1SS, COM_1_TM1SS, COM_1_TK1SS, COM_1_TU, COM_1_TA;
-float COM_2_TV1SS, COM_2_TM1SS, COM_2_TK1SS, COM_2_TU, COM_2_TA;
-float COM_3_TV1SS, COM_3_TM1SS, COM_3_TK1SS, COM_3_TU, COM_3_TA;
+COMValue COM_1_TV1SS, COM_1_TM1SS, COM_1_TK1SS, COM_1_TU, COM_1_TA;
+COMValue COM_2_TV1SS, COM_2_TM1SS, COM_2_TK1SS; //, COM_2_TU, COM_2_TA;
+COMValue COM_3_TV1SS, COM_3_TM1SS, COM_3_TK1SS; //, COM_3_TU, COM_3_TA;
 float TV1SS, TM1SS, TK1SS, TU, TA;
 
 const byte ID_TV1SS = 0x08;  // Seriellt - Solslinga varmsida, ut fr�n solf�ngare
@@ -112,8 +116,6 @@ int COM_1_STATE = WAITING_FOR_NEW_MESS;
 int COM_2_STATE = WAITING_FOR_NEW_MESS;
 int COM_3_STATE = WAITING_FOR_NEW_MESS;
 
-
-#include <Pipe.h>
 
 /*  Serial port 0 uses UART1 (aka UART1A)
  *  Serial port 1 uses UART4 (aka UART1B)
