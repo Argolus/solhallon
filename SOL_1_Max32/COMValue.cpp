@@ -67,7 +67,7 @@ unsigned long COMValue::TimeStamp() const{
 	return _timestamp;
 }
 
-float COMValue::Vote(COMValue& a, COMValue& b, COMValue& c, float Tolerans,bool useLow){
+float COMValue::Vote(COMValue& a, COMValue& b, COMValue& c, float Tolerance,bool useLow){
   float Data[3], tmp;
   int nbr = 0;
   if(!a.inSafeState()){
@@ -110,18 +110,28 @@ float COMValue::Vote(COMValue& a, COMValue& b, COMValue& c, float Tolerans,bool 
     Data[1] = tmp;
   }  
   // Data sortarad i storleksornding, kolla om de ligger inom tolerans.
-  if(Data[2] - Data[0] <= Tolerans){
-    // japp, alla data är okej.
+  if(Data[2] - Data[0] <= Tolerance){
+    // japp, alla data är okej. Kör på medelvärde
     return (Data[0] + Data[1] + Data[2]) / 3;  
   }
   // nähä, nåt värde är dåligt... 
-  if(useLow && (Data[1] - Data[0] <= Tolerans)){
+  if(useLow && (Data[1] - Data[0] <= Tolerance)){
     return (Data[0] + Data[1]) / 2;
   }
-  if(Data[2] - Data[1] <= Tolerans){
+  if((!useLow) && Data[2] - Data[1] <= Tolerance){
     return (Data[2] + Data[1]) / 2;
-  } 
-  // det skiljer för mycket mellan alla värden. Kör på median...
+  }
+  if(Data[1] - Data[0] <= Tolerance){
+    return (Data[0] + Data[1]) / 2;
+  }
+  if(Data[2] - Data[1] <= Tolerance){
+    return (Data[2] + Data[1]) / 2;
+  }
+   
+  // det skiljer för mycket mellan alla värden..
+  if(useLow)
+    return Data[0];
+  
   return Data[1];
 
 }

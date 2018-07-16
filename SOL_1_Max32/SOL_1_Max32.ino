@@ -1,9 +1,10 @@
 #include <Wire.h>
 #include "solsidan.h"
 
-const float CURRENT_VERSION = 0.6;
+const float CURRENT_VERSION = 0.7;
 
 /************************************************************************
+ *   Initializations
 ************************************************************************/
 
 void setup(void) {
@@ -28,43 +29,49 @@ void setup(void) {
   RaspiPrint("\n-------\nJohans Solsystem version ");
   RaspiPrint(CURRENT_VERSION);
   RaspiPrintln("\n-------\n");
- 
   oldFlowConvTime = 0;
   Wire.begin(); // join i2c bus (address optional for master)
+  delay(20);
+  LoadSENSORS();
 }
 
+/************************************************************************
+ * Main Loop 
+ ************************************************************************/
 void loop(void) {
-  memset(COM_1_ID_String, 0, SizeOfID); 
-  memset(COM_2_ID_String, 0, SizeOfID); 
-  memset(COM_3_ID_String, 0, SizeOfID); 
-  ScanOneWire();
-  COM_1_pollSerial();
-  COM_2_pollSerial();
-  COM_3_pollSerial();
-  TVVB_PT = ReadAnalog(AI_PIN_G1, TVVB_PT_CH);
-  TV1SS_PT = ReadAnalog(AI_PIN_G1, TV1SS_PT_CH);
-  PSS = ReadAnalog(AI_PIN_G1, PSS_CH);
-  PTANK = ReadAnalog(AI_PIN_G1, PTANK_CH);
-  iFVV = digitalRead(FVV);
-  
-//<- Debug Print ->
-  RaspiDebugPrint("TVVB_PT "); RaspiDebugPrintln(TVVB_PT);
-  RaspiDebugPrint("TV1SS_PT "); RaspiDebugPrintln(TV1SS_PT);
-  RaspiDebugPrint("PSS "); RaspiDebugPrintln(PSS);
-  RaspiDebugPrint("PTANK "); RaspiDebugPrintln(PTANK);
-  RaspiDebugPrint("iFVV "); RaspiDebugPrintln(iFVV);
-//<- End Debug Print ->
-  
-  ConvertTemp();
+  ScanOneWire();  // Uppdatera Dallas sensor
+  PollSerial();   // Ta emot seriell data fr taket
+  ReadLocalIO();  // Lokala I/O
+  DebugPrint();   
+  ConvertTemp();  
   ConvertFlow();
-  DoControl(); 
-  checkRaspiComm();
-  DebugPrint();
+  DoControl();   
+  
+  checkRaspiComm(); //Kolla om nytt kommando fr RaspberryPI?
   delay(500);
   RUN_DT();
 }
 
+/************************************************************************
+ * Local functions
+************************************************************************/
 
+void ReadLocalIO(){
+  TVVB_PT = ReadAnalog(AI_PIN_G1, TVVB_PT_CH);
+  TV1SS_PT = ReadAnalog(AI_PIN_G1, TV1SS_PT_CH);
+  PSS = ReadAnalog(AI_PIN_G1, PSS_CH);
+  PTANK = ReadAnalog(AI_PIN_G1, PTANK_CH);
+  iFVV = digitalRead(FVV);  
+}
+
+void PollSerial(){
+  memset(COM_1_ID_String, 0, SizeOfID); 
+  memset(COM_2_ID_String, 0, SizeOfID); 
+  memset(COM_3_ID_String, 0, SizeOfID); 
+  COM_1_pollSerial();
+  COM_2_pollSerial();
+  COM_3_pollSerial();  
+}
 
 void ConvertTemp(void){
   TV1SS = COMValue::Vote(COM_1_TV1SS, COM_2_TV1SS, COM_3_TV1SS, TakTolerans, false);
@@ -101,7 +108,7 @@ void ConvertFlow(void){
 
 
 void DoControl(void){
-  TKA_T = DallasTemp(_TKA); 
+  TKA_T = DallasTemp(ACK_TANK_LOW_1_DALLAS); 
   if(TV1SS > (TKA_T + SS_DIFF_START)){
     digitalWrite(CSS, HIGH);
     if(!CSS_ON){ CSS_ON = true; RaspiPrintln("SPA_CP ON"); }
@@ -148,8 +155,8 @@ unsigned long lastCPVV_OFF;
 
 void CPVV_Enable(boolean ON, int32_t nutid){
   if(ON){
-    TVI_T = DallasTemp(_TVI);
-    TDU_T = DallasTemp(_TDU);
+    TVI_T = DallasTemp(HEATEX_DOM_IN_DALLAS);
+    TDU_T = DallasTemp(HEATEX_TANK_OUT_DALLAS);
     
 //<- Debug Print ->
     RaspiDebugPrint("TVI_T "); RaspiDebugPrintln(TVI_T);

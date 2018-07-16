@@ -7,13 +7,13 @@
 bool DESIGN_TEST = false;
 
 // Dallas 1-wire adresser == Index i DallasNetwork[]
-#define _TKA   0      // Värmevatten inne i acktanken (dykr�r mellan solslinga in/ut)
+//#define _TKA   0      // Värmevatten inne i acktanken (dykr�r mellan solslinga in/ut)
 //#define _TK2SS 1      // Solslinga ut (nere) fr�n acktank (dykr�r)
 //#define _TV2SS 2      // Solslinga in till acktank (givare p� r�ret)
-#define _TVA   3      // V�rmevatten ut (uppe) fr�n pannan p� varmvattensidan
+//#define _TVA   3      // V�rmevatten ut (uppe) fr�n pannan p� varmvattensidan
 //#define _TDI   4      // V�rmevatten in (uppe) till tappvarmvattenautomat
-#define _TDU   5      // V�rmevatten ut (nere) fr�n tappvarmvattenautomat
-#define _TVI   6      // Tappvarmvatten in (nere) till tappvarmvattenautomat
+//#define _TDU   5      // V�rmevatten ut (nere) fr�n tappvarmvattenautomat
+//#define _TVI   6      // Tappvarmvatten in (nere) till tappvarmvattenautomat
 //#define _TVU   7      // Tappvarmvatten ut (uppe) fr�n tappvarmvattenautomat
 //#define _TR    8      // Rumstemperatur
 //#define _TVD   9      // Temp v�rmedump
@@ -61,8 +61,8 @@ const float SS_DIFF_START = 3.0;
 const float SS_DIFF_STOP  = 1.0;
 const float VV_DUMP_OPEN = 88.0;
 const float VV_DUMP_CLOSE = 83.0;
-//const float MAX_DIFF_PVV = 3.0;    // Max till�ten tempdiff mellan kallsida plattv�rmev�xlare och inkommande kallvatten
-const float START_TEMP_PVV = 18.0; // Starta cirkpump n�r ikommande kallvatten �r kallare �r denna temp
+//const float MAX_DIFF_PVV = 3.0;   // Max till�ten tempdiff mellan kallsida plattv�rmev�xlare och inkommande kallvatten
+const float START_TEMP_PVV = 18.0;  // Starta cirkpump om inkommande kallvatten kallare 
 
 unsigned long CPVV_MIN_RUNTIME = 4000; // Minimal g�ngtid f�r CPVV (enhet ms)
 unsigned long CPVV_MIN_OFFTIME = 4000; // Minimal stopptid f�r CPVV (enhet ms)
@@ -149,3 +149,50 @@ volatile bool tx_0_Running = false;
 volatile bool tx_1_Running = false;
 volatile bool tx_2_Running = false;
 volatile bool tx_3_Running = false;
+
+typedef enum {
+  SOLAR_OUTLET_COM1 = 0, 
+  SOLAR_OUTLET_COM2 = 1, 
+  SOLAR_OUTLET_COM3 = 2, 
+  SOLAR_MID_COM1 = 3, 
+  SOLAR_MID_COM2 = 4, 
+  SOLAR_MID_COM3 = 5, 
+  SOLAR_INLET_COM1 = 6, 
+  SOLAR_INLET_COM2 = 7, 
+  SOLAR_INLET_COM3 = 8,
+  EQU_BOX_COM1 = 9,
+  FREE_AIR_COM1 = 10,
+  SOLAR_EXP_TANK_DALLAS = 11,
+  SOLAR_PUMP_ASS_DALLAS = 12,
+  SOLAR_HEATEX_OUT_DALLAS = 13,
+  SOLAR_HEATEX_IN_DALLAS = 14,
+  SOLAR_SECURITY_TANK_DALLAS = 15, 
+  ACK_TANK_MID_1_DALLAS = 16,
+  ACK_TANK_MID_2_DALLAS = 17,
+  ACK_TANK_MID_3_DALLAS = 18,
+  ACK_TANK_LOW_1_DALLAS = 19,
+  ACK_TANK_LOW_2_DALLAS = 20,
+  ACK_TANK_LOW_3_DALLAS = 21,
+  ACK_TANK_HIGH_1_DALLAS = 22,
+  ACK_TANK_HIGH_2_DALLAS = 23,
+  ACK_TANK_HIGH_3_DALLAS = 24,
+  ACK_TANK_HEATEX_RETURN_DALLAS = 25,
+  ACK_TANK_OUT_DALLAS = 26,
+  HEATEX_TANK_OUT_DALLAS = 27,
+  HEATEX_TANK_IN_DALLAS = 28,
+  HEATEX_DOM_IN_DALLAS = 29,
+  HEATEX_DOM_OUT_DALLAS = 30,
+  DUMP_VALVE_DALLAS = 31,
+  DOM_WATER_HEATER_DALLAS = 32,
+  TECH_ROOM_DALLAS = 33,
+  NR_OF_SENSORS
+}teValIndex;
+
+const int sensorIDLen = 8;
+struct t_Value{
+  byte ADDR[sensorIDLen];
+//  teValIndex Index;
+};
+
+t_Value SENSORS[NR_OF_SENSORS];
+
