@@ -56,7 +56,7 @@ boolean IsEqualSensorID(byte Sensor1[], byte Sensor2[]){
   }while(LengthOfID>0 && IsEqual);
 }  
 
-/*
+
 byte adSPO_T1[8] = {0x28, 0xB8, 0x46, 0xDE, 0x06, 0x00, 0x00, 0x08}; 
 byte adSPO_T2[8] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}; 
 byte adSPO_T3[8] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}; 
@@ -68,30 +68,41 @@ byte adSPI_T2[8] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 byte adSPI_T3[8] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 byte adRFA_T1[8] = {0x28, 0x37, 0x72, 0xDC, 0x06, 0x00, 0x00, 0x5A};
 byte adREB_T1[8] = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
-
+byte ad_ACK_TANK_LOW_1_DALLAS[8]   = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_SOLAR_HEATEX_OUT_DALLAS[8] = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_SOLAR_HEATEX_IN_DALLAS[8]  = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_ACK_TANK_OUT_DALLAS[8]     = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_HEATEX_TANK_IN_DALLAS[8]   = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_HEATEX_TANK_OUT_DALLAS[8]  = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_HEATEX_DOM_IN_DALLAS[8]    = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_HEATEX_DOM_OUT_DALLAS[8]   = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_TECH_ROOM_DALLAS[8]        = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_DUMP_VALVE_DALLAS[8]       = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_ACK_TANK_MID_1_DALLAS[8]   = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
+byte ad_ACK_TANK_HEATEX_RETURN_DALLAS[8] = {0x28, 0x49, 0xB2, 0xDD, 0x06, 0x00, 0x00, 0x7C}; 
 
 void UpdateRoofAdresses(){
-  UpdateAddr(SOLAR_OUTLET_COM1, adSPO_T1);
-  UpdateAddr(SOLAR_MID_COM1, adSPM_T1);
-  UpdateAddr(SOLAR_INLET_COM1, adSPI_T1);
-  UpdateAddr(FREE_AIR_COM1, adRFA_T1);
-  UpdateAddr(EQU_BOX_COM1, adREB_T1);
-  UpdateAddr(ACK_TANK_LOW_DALLAS, DallasNetwork[0].ADDR);
-  UpdateAddr(SOLAR_HEATEX_OUT_DALLAS, DallasNetwork[1].ADDR);
-  UpdateAddr(SOLAR_HEATEX_IN_DALLAS, DallasNetwork[2].ADDR);
-  UpdateAddr(ACK_TANK_OUT_DALLAS, DallasNetwork[3].ADDR);
-  UpdateAddr(HEATEX_TANK_IN_DALLAS, DallasNetwork[4].ADDR);
-  UpdateAddr(HEATEX_TANK_OUT_DALLAS, DallasNetwork[5].ADDR);
-  UpdateAddr(HEATEX_DOM_IN_DALLAS, DallasNetwork[6].ADDR);
-  UpdateAddr(HEATEX_DOM_OUT_DALLAS, DallasNetwork[7].ADDR);
-  UpdateAddr(TECH_ROOM_DALLAS, DallasNetwork[8].ADDR);
-  UpdateAddr(DUMP_VALVE_DALLAS, DallasNetwork[9].ADDR);
-  UpdateAddr(ACK_TANK_HEATEX_RETURN_DALLAS, DallasNetwork[10].ADDR);
+  UpdateSensorAddress(SOLAR_OUTLET_COM1, adSPO_T1);
+  UpdateSensorAddress(SOLAR_MID_COM1, adSPM_T1);
+  UpdateSensorAddress(SOLAR_INLET_COM1, adSPI_T1);
+  UpdateSensorAddress(FREE_AIR_COM1, adRFA_T1);
+  UpdateSensorAddress(EQU_BOX_COM1, adREB_T1);
+  UpdateSensorAddress(ACK_TANK_LOW_1_DALLAS, ad_ACK_TANK_LOW_1_DALLAS);
+  UpdateSensorAddress(SOLAR_HEATEX_OUT_DALLAS, ad_SOLAR_HEATEX_OUT_DALLAS);
+  UpdateSensorAddress(SOLAR_HEATEX_IN_DALLAS, ad_SOLAR_HEATEX_IN_DALLAS);
+  UpdateSensorAddress(ACK_TANK_OUT_DALLAS, ad_ACK_TANK_OUT_DALLAS);
+  UpdateSensorAddress(HEATEX_TANK_IN_DALLAS, ad_HEATEX_TANK_IN_DALLAS);
+  UpdateSensorAddress(HEATEX_TANK_OUT_DALLAS, ad_HEATEX_TANK_OUT_DALLAS);
+  UpdateSensorAddress(HEATEX_DOM_IN_DALLAS, ad_HEATEX_DOM_IN_DALLAS);
+  UpdateSensorAddress(HEATEX_DOM_OUT_DALLAS, ad_HEATEX_DOM_OUT_DALLAS);
+  UpdateSensorAddress(TECH_ROOM_DALLAS, ad_TECH_ROOM_DALLAS);
+  UpdateSensorAddress(DUMP_VALVE_DALLAS, ad_DUMP_VALVE_DALLAS);
+  UpdateSensorAddress(ACK_TANK_HEATEX_RETURN_DALLAS, ad_ACK_TANK_HEATEX_RETURN_DALLAS);
 //  UpdateAddr(, DallasNetwork[11].ADDR);
-  UpdateAddr(ACK_TANK_MID_DALLAS, DallasNetwork[12].ADDR);
+  UpdateSensorAddress(ACK_TANK_MID_1_DALLAS, ad_ACK_TANK_HEATEX_RETURN_DALLAS);
 //  UpdateAddr(, DallasNetwork[13].ADDR);
 //  UpdateAddr(, DallasNetwork[14].ADDR);
 //  UpdateAddr(, DallasNetwork[15].ADDR);
 //  UpdateAddr(, DallasNetwork[16].ADDR);
 }
-*/
+

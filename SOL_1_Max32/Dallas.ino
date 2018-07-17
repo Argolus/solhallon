@@ -30,7 +30,6 @@ t_OneWireID DallasNetwork[SIZE_OF_DALLAS_NETWORK] = {
   {ACK_TANK_MID_2_DALLAS, 0.0   },
   {ACK_TANK_MID_3_DALLAS, 0.0   }, 
   {ACK_TANK_HIGH_3_DALLAS, 0.0   }
-// Suck!!!  Vaffö ä de så svårt å klicka på SAVE...   28:16:22:08:00:00:80:1C  & 28:B7:20:1f:00:00:80:40 ATM_T2 resp ATM_T3...
 };
 
 
@@ -51,6 +50,7 @@ void ScanOneWire(){
   delay(1000);     // maybe 750ms is enough, maybe not
   
   for (int j=0; j<SIZE_OF_DALLAS_NETWORK; j++){
+    delay(150);
     present = ds.reset();
     ds.select(SENSORS[DallasNetwork[j].Sensor].ADDR);    
     ds.write(0xBE);         // Read Scratchpad
@@ -65,7 +65,7 @@ void ScanOneWire(){
         RaspiPrint(DallasSensorID(DallasNetwork[j].Sensor)); 
         RaspiPrintln(" INIT");
       }
-      else if (data[1] == 0xFF && data[0] == 0xFF){
+      else if ((data[1] == 0xFF && data[0] == 0xFF) || (data[1] == 0x00 && data[0] == 0x00)){
         RaspiPrint(DallasSensorID(DallasNetwork[j].Sensor)); RaspiPrintln("MISSING"); 
       }
       else{
@@ -81,7 +81,9 @@ void ScanOneWire(){
       }
     }
     else{
-      sendErrorToRaspi("DALLAS NETWORK MISSING"); }
+//      RaspiPrint(DallasSensorID(DallasNetwork[j].Sensor)); RaspiPrintln("MISSING");
+      sendErrorToRaspi("DALLAS SENSOR MISSING"); 
+    }
   }
 }  
 
@@ -96,6 +98,7 @@ float DallasTemp(teValIndex Sensor){
       found = true;
       temp = DallasNetwork[index].temp;
     }
+    index++;
   }
   return temp;
 }

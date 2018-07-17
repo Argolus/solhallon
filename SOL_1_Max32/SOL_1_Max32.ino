@@ -21,18 +21,18 @@ void setup(void) {
   pinMode(FL_VV_IN, INPUT);
   pinMode(FL_PVV, INPUT);
   pinMode(FL_SOL, INPUT);
-  Serial.begin(38400); // Till Raspberryn  
+  Serial.begin(115200); // Till Raspberryn  
   Serial1.begin(9600); // Tak 1
-  Serial3.begin(9600); // Tak 2 Arduino på taket, TV1SS, TM1SS, TK1SS, TU, TA
-  Serial2.begin(9600); // Tak 3
+  Serial2.begin(9600); // Tak 2 Arduino på taket, TV1SS, TM1SS, TK1SS, TU, TA
+  Serial3.begin(9600); // Tak 3
   configureInterrupts();
-  RaspiPrint("\n-------\nJohans Solsystem version ");
+  RaspiPrint("\n-------\nB3Labz Solhallon version ");
   RaspiPrint(CURRENT_VERSION);
   RaspiPrintln("\n-------\n");
   oldFlowConvTime = 0;
   Wire.begin(); // join i2c bus (address optional for master)
   delay(20);
-  LoadSENSORS();
+//  LoadSENSORS();
 }
 
 /************************************************************************
@@ -48,7 +48,7 @@ void loop(void) {
   DoControl();   
   
   checkRaspiComm(); //Kolla om nytt kommando fr RaspberryPI?
-  delay(500);
+  delay(200);
   RUN_DT();
 }
 
@@ -165,7 +165,7 @@ void CPVV_Enable(boolean ON, int32_t nutid){
       RaspiDebugPrintln("CPVV_ON = true");
     else
       RaspiDebugPrintln("CPVV_ON = false");
-    RaspiDebugPrint("lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid == "); RaspiDebugPrintln(lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid);
+    RaspiDebugPrint("(lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid) =>  "); RaspiDebugPrintln(lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid);
 //<- End Debug Print ->
 
     if(TVI_T < START_TEMP_PVV ){

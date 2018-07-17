@@ -73,7 +73,7 @@ void COM_3_pollSerial(){
 //              RaspiPrintln("COM_3 TK1SS"); 
               break;
            default:
-              RaspiPrintln("COM_3 Unknown"); 
+              RaspiDebugPrintln("COM_3 Unknown"); 
               break;
           }
           COM_3_resetBuffer();

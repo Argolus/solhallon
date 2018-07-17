@@ -135,15 +135,15 @@ char rx_1_Buffer[RXSIZE];
 char rx_2_Buffer[RXSIZE];
 char rx_3_Buffer[RXSIZE];
 
-Pipe tx_0(TXSIZE,true,tx_1_Buffer);   // NA
+Pipe tx_0(TXSIZE,true,tx_0_Buffer);   // Raspberry
 Pipe tx_1(TXSIZE,true,tx_1_Buffer);   // NA
-Pipe tx_2(TXSIZE,true,tx_1_Buffer);   // Raspberry
-Pipe tx_3(TXSIZE,true,tx_1_Buffer);   // NA
+Pipe tx_2(TXSIZE,true,tx_2_Buffer);   // NA
+Pipe tx_3(TXSIZE,true,tx_3_Buffer);   // NA
 
-Pipe rx_0(RXSIZE,false,rx_1_Buffer);   // B0
-Pipe rx_1(RXSIZE,false,rx_1_Buffer);   // B1
-Pipe rx_2(RXSIZE,false,rx_1_Buffer);   // NA (Raspberry)
-Pipe rx_3(RXSIZE,false,rx_1_Buffer);   // B2
+Pipe rx_0(RXSIZE,false,rx_0_Buffer);   // (Raspberry)
+Pipe rx_1(RXSIZE,false,rx_1_Buffer);   // 
+Pipe rx_2(RXSIZE,false,rx_2_Buffer);   //  
+Pipe rx_3(RXSIZE,false,rx_3_Buffer);   // 
 
 volatile bool tx_0_Running = false;
 volatile bool tx_1_Running = false;
