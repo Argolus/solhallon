@@ -68,7 +68,7 @@ void ScanOneWire(){
         if (celsius > -40.0 && celsius < 125.0){ 
           DallasNetwork[j].temp = celsius;
           RaspiPrint(DallasSensorID(DallasNetwork[j].Sensor)); 
-          RaspiPrintln(DallasNetwork[j].temp);
+          RaspiPrint(" "); RaspiPrintln(DallasNetwork[j].temp);
         }
         else{
           RaspiPrint(DallasSensorID(DallasNetwork[j].Sensor)); 
