@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include "solsidan.h"
 
-const float CURRENT_VERSION = 0.7;
+const float CURRENT_VERSION = 0.75;
 
 /************************************************************************
  *   Initializations
@@ -32,7 +32,7 @@ void setup(void) {
   oldFlowConvTime = 0;
   Wire.begin(); // join i2c bus (address optional for master)
   delay(20);
-//  LoadSENSORS();
+  LoadSENSORS();
 }
 
 /************************************************************************

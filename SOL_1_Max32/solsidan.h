@@ -185,7 +185,7 @@ typedef enum {
   DUMP_VALVE_DALLAS = 31,
   DOM_WATER_HEATER_DALLAS = 32,
   TECH_ROOM_DALLAS = 33,
-  NR_OF_SENSORS
+  NR_OF_SENSORS = 34
 }teValIndex;
 
 const int sensorIDLen = 8;

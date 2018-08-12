@@ -1,6 +1,6 @@
 const int NoOfTests = 7;
 typedef void (*FP)(void);
-FP TESTCASES[NoOfTests] = {&TestCase_1, &TestCase_2, &TestCase_3, &TestCase_4, &TestCase_5, &TestCase_6, &TestCase_7};
+FP TESTCASES[NoOfTests] = {&TestCase_1, &TestCase_2, &TestCase_3, &TestCase_4, &TestCase_5, &TestCase_6 , &TestCase_7};
 
 void RUN_DT(){
   if(DESIGN_TEST){

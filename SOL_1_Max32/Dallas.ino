@@ -1,5 +1,5 @@
 #include <OneWire.h>
-#define SIZE_OF_DALLAS_NETWORK 20
+#define SIZE_OF_DALLAS_NETWORK 16
 
 OneWire  ds(BUS);  // on pin 77
 struct t_OneWireID{
@@ -21,15 +21,11 @@ t_OneWireID DallasNetwork[SIZE_OF_DALLAS_NETWORK] = {
   {TECH_ROOM_DALLAS, 0.0        },
   {DUMP_VALVE_DALLAS, 0.0       },
   {ACK_TANK_HEATEX_RETURN_DALLAS, 0.0 },
-  {DOM_WATER_HEATER_DALLAS, 0.0 },
   {ACK_TANK_MID_1_DALLAS, 0.0   },
   {ACK_TANK_HIGH_1_DALLAS, 0.0  },
   {ACK_TANK_HIGH_2_DALLAS, 0.0  },
   {ACK_TANK_LOW_2_DALLAS, 0.0   },
-  {ACK_TANK_LOW_3_DALLAS, 0.0   },
-  {ACK_TANK_MID_2_DALLAS, 0.0   },
-  {ACK_TANK_MID_3_DALLAS, 0.0   }, 
-  {ACK_TANK_HIGH_3_DALLAS, 0.0   }
+  {ACK_TANK_LOW_3_DALLAS, 0.0   }
 };
 
 
@@ -66,7 +62,7 @@ void ScanOneWire(){
         RaspiPrintln(" INIT");
       }
       else if ((data[1] == 0xFF && data[0] == 0xFF) || (data[1] == 0x00 && data[0] == 0x00)){
-        RaspiPrint(DallasSensorID(DallasNetwork[j].Sensor)); RaspiPrintln("MISSING"); 
+        RaspiPrint(DallasSensorID(DallasNetwork[j].Sensor)); RaspiPrintln(" MISSING"); 
       }
       else{
         if (celsius > -40.0 && celsius < 125.0){ 

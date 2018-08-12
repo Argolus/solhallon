@@ -166,14 +166,18 @@ void COM_0_resetBuffer(){
 #define DEBUG 2
 #define SET_NEW_SENSOR 2
 #define RUN_DESIGN_TEST 3
+#define RESET_ALL_SENSOR_ID 4
+#define STORE_SENSORS_TO_E2 5
 
 void checkRaspiComm(){
 //**************************************************************************
-// Frame layout:   | H1 | H2 |Len |Cmd | data | CRC     |
-// Ex DebugPrint:   0xEE 0xFF 0x02 0x01  0x01  0xcc 0xcc  (RaspiDebugPrint)
-// Ex DebugPrint:   0xEE 0xFF 0x02 0x01  0x02  0xcc 0xcc  (DebugPrint)
-// Ex Set SensorID: 0xEE 0xFF 0x0A 0x02  DATA  0xcc 0xcc
-// Ex Design test:  0xEE 0xFF 0x01 0x03        0xcc 0xcc  (run design tests)
+// Frame layout:       | H1 | H2 |Len |Cmd | data | CRC     |
+// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x01  0xB4 0xF3  (RaspiDebugPrint)
+// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x02  0xcc 0xcc  (DebugPrint)
+// Ex Set SensorID:     0xEE 0xFF 0x0A 0x02  DATA  0xcc 0xcc
+// Ex Design test:      0xEE 0xFF 0x01 0x03  --    0xC0 0xF2  (run design tests)
+// Ex Reset SensorIDs:  0xEE 0xFF 0x01 0x04  --    0xC1 0xF3
+// Ex Store SensorIDs:  0xEE 0xFF 0x01 0x05  --    0xC2 0xF4
 //
 // Set Sensor ID frame layout
 // |teValIndex|   Sensor ID                  
@@ -246,12 +250,23 @@ void checkRaspiComm(){
               break;
             case RUN_DESIGN_TEST:
               DESIGN_TEST = true;
+              break;
+            case RESET_ALL_SENSOR_ID:
+              ResetAllSensorIDs();
+              break;
+            case STORE_SENSORS_TO_E2:
+              StoreSENSORS();
+              break;
             default:
               break;
           }
         }
         else{
           sendErrorToRaspi("COM_0 Bad Checksum");
+          RaspiPrint("Expected: ");
+          RaspiPrintln(fletcher16(COM_0_data, COM_0_datalen-2));
+          RaspiPrint("Recieved: ");
+          RaspiPrintln(COM_0_checksum);      
         }
         COM_0_resetBuffer();
         break;

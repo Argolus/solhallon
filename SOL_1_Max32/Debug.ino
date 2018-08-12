@@ -37,10 +37,18 @@ void DebugPrint(){
   RaspiPrint("     COM_3_STATE  : ");RaspiPrintln(ComStateToString(COM_3_STATE));
   RaspiPrintln();
   RaspiPrintln(" ----    Dallas Network    ------ ");
-  RaspiPrintln(" - Index  -  ID   -   -   -  -  - ");
+  RaspiPrintln(" - Index  -  ID   -   -   -  -  -   Temp");
   for(int i=0; i<SIZE_OF_DALLAS_NETWORK; i++){
     RaspiPrint("   "); RaspiPrint(i); RaspiPrint("     ");
-    RaspiPrintln(DallasSensorID(DallasNetwork[i].Sensor));
+    RaspiPrint(DallasSensorID(DallasNetwork[i].Sensor));
+    RaspiPrint("   ");
+    RaspiPrintln(DallasNetwork[i].temp);
+  }
+  RaspiPrintln(" ----        SENSORS       ------ ");
+  RaspiPrintln(" - Index  -  ID   -   -   -  -  - ");
+  for(int i=0; i<NR_OF_SENSORS; i++){
+    RaspiPrint("   "); RaspiPrint(i); RaspiPrint("     ");
+    RaspiPrintln(DallasSensorID((teValIndex)i));
   }
   RaspiPrintln("<- END DEBUGINFO ->");   
    
