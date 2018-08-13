@@ -2,6 +2,13 @@ int dbgPrint = 0;
 
 
 void DebugPrint(){
+
+  RaspiDebugPrint("TVVB_PT "); RaspiDebugPrintln(TVVB_PT);
+  RaspiDebugPrint("TV1SS_PT "); RaspiDebugPrintln(TV1SS_PT);
+  RaspiDebugPrint("PSS "); RaspiDebugPrintln(PSS);
+  RaspiDebugPrint("PTANK "); RaspiDebugPrintln(PTANK);
+  RaspiDebugPrint("iFVV "); RaspiDebugPrintln(iFVV);
+
   if(dbgPrint!= 2) return;
   dbgPrint = 0;
   RaspiPrintln("<- DEBUGINFO ->");
@@ -30,10 +37,18 @@ void DebugPrint(){
   RaspiPrint("     COM_3_STATE  : ");RaspiPrintln(ComStateToString(COM_3_STATE));
   RaspiPrintln();
   RaspiPrintln(" ----    Dallas Network    ------ ");
-  RaspiPrintln(" - Index  -  ID   -   -   -  -  - ");
+  RaspiPrintln(" - Index  -  ID   -   -   -  -  -   Temp");
   for(int i=0; i<SIZE_OF_DALLAS_NETWORK; i++){
     RaspiPrint("   "); RaspiPrint(i); RaspiPrint("     ");
-    RaspiPrintln(SensorID(i));
+    RaspiPrint(DallasSensorID(DallasNetwork[i].Sensor));
+    RaspiPrint("   ");
+    RaspiPrintln(DallasNetwork[i].temp);
+  }
+  RaspiPrintln(" ----        SENSORS       ------ ");
+  RaspiPrintln(" - Index  -  ID   -   -   -  -  - ");
+  for(int i=0; i<NR_OF_SENSORS; i++){
+    RaspiPrint("   "); RaspiPrint(i); RaspiPrint("     ");
+    RaspiPrintln(DallasSensorID((teValIndex)i));
   }
   RaspiPrintln("<- END DEBUGINFO ->");   
    

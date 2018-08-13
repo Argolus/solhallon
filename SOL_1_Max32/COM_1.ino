@@ -65,29 +65,33 @@ void COM_1_pollSerial(){
           temp = COM_1_getTemp();
           RaspiPrint("COM_1: ");
           sendValueToRaspi(COM_1_ID_String, temp);
-          switch(COM_1_getData(10)){
-            case ID_TV1SS:
-              COM_1_TV1SS = temp;
+          if(COM_1_data[10] != 0x1A && COM_1_data[10] != 0x67 && COM_1_data[10] != 0xFC){
+            RaspiPrint("!!!! COM1 Err ");
+            RaspiPrintln(COM_1_data[10]);
+          }
+          switch(SensorIndex(&COM_1_data[3])){
+            case SOLAR_OUTLET_COM1:
+              COM_1_TV1SS.setValue(temp);
 //              RaspiPrintln("COM_1 TV1SS"); 
               break;
-            case ID_TM1SS:
-              COM_1_TM1SS = temp;
+            case SOLAR_MID_COM1:
+              COM_1_TM1SS.setValue(temp);
 //              RaspiPrintln("COM_1 TM1SS"); 
               break;
-            case ID_TK1SS:
-              COM_1_TK1SS = temp;
+            case SOLAR_INLET_COM1:
+              COM_1_TK1SS.setValue(temp);
 //              RaspiPrintln("COM_1 TK1SS"); 
               break;
-            case ID_TA:
-              COM_1_TA = temp;
+            case EQU_BOX_COM1:
+              COM_1_TA.setValue(temp);
 //              RaspiPrintln("COM_1 TA"); 
               break;
-            case ID_TU:  
-              COM_1_TU = temp;
+            case FREE_AIR_COM1:  
+              COM_1_TU.setValue(temp);
 //              RaspiPrintln("COM_1 TU"); 
               break;
             default:
-              RaspiPrintln("COM_1 Unknown"); 
+              RaspiDebugPrintln("COM_1 Unknown"); 
               break;
           }
           COM_1_resetBuffer();

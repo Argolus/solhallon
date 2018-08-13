@@ -140,25 +140,7 @@ void kick_3() {
         setIntEnable(_UART5_TX_IRQ);
     }    
 }
-/*   
-int digitalPinToInterrupt(int pin){
-  int interrupt = -1;
-  switch(pin){
-    case 2:
-      interrupt = 1;
-      break;
-    case 3:
-      interrupt = 0;
-      break;
-    case 7:
-      interrupt = 2;
-      break;
-    default:
-      break;
-  }
-  return interrupt;
-}
-*/
+
 void configureInterrupts(){
   attachCoreTimerService(tmrCallback);
 
@@ -181,12 +163,12 @@ void configureInterrupts(){
   setIntVector(_UART_5_VECTOR, serISR_3); //Serial3
   setIntPriority(_UART1_RX_IRQ, 4, 0);
   setIntPriority(_UART4_RX_IRQ, 4, 1);
-  setIntPriority(_UART2_RX_IRQ, 4, 2);
-  setIntPriority(_UART5_RX_IRQ, 4, 3);
+  setIntPriority(_UART2_RX_IRQ, 4, 1);
+  setIntPriority(_UART5_RX_IRQ, 4, 1);
   setIntPriority(_UART1_TX_IRQ, 3, 0);
   setIntPriority(_UART4_TX_IRQ, 4, 1);
-  setIntPriority(_UART2_TX_IRQ, 4, 2);
-  setIntPriority(_UART5_TX_IRQ, 4, 3);
+  setIntPriority(_UART2_TX_IRQ, 4, 1);
+  setIntPriority(_UART5_TX_IRQ, 4, 1);
   clearIntFlag(_UART1_RX_IRQ);
   clearIntFlag(_UART4_RX_IRQ);
   clearIntFlag(_UART2_RX_IRQ);

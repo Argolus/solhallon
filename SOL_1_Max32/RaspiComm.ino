@@ -158,25 +158,30 @@ void COM_0_resetBuffer(){
 #define COMMAND COM_0_data[3]
 #define DATALENGTH COM_0_data[2]
 #define PRINTTYPE COM_0_data[4]
-#define DALLASINDEX COM_0_data[4]
+#define COM_SENSOR_INDEX COM_0_data[4]
+#define COM_SENSOR_ADDRESS &COM_0_data[5]
 #define PRINT 1
 #define NUMBER_OF_PRINTTYPES 3
 #define RASPI 1
 #define DEBUG 2
 #define SET_NEW_SENSOR 2
 #define RUN_DESIGN_TEST 3
+#define RESET_ALL_SENSOR_ID 4
+#define STORE_SENSORS_TO_E2 5
 
 void checkRaspiComm(){
 //**************************************************************************
-// Frame layout:   | H1 | H2 |Len |Cmd | data | CRC     |
-// Ex DebugPrint:   0xEE 0xFF 0x02 0x01  0x01  0xcc 0xcc  (RaspiDebugPrint)
-// Ex DebugPrint:   0xEE 0xFF 0x02 0x01  0x02  0xcc 0xcc  (DebugPrint)
-// Ex Set DallasID: 0xEE 0xFF 0x0A 0x02  DATA  0xcc 0xcc
-// Ex DebugPrint:   0xEE 0xFF 0x01 0x03        0xcc 0xcc  (run design tests)
+// Frame layout:       | H1 | H2 |Len |Cmd | data | CRC     |
+// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x01  0xB4 0xF3  (RaspiDebugPrint)
+// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x02  0xcc 0xcc  (DebugPrint)
+// Ex Set SensorID:     0xEE 0xFF 0x0A 0x02  DATA  0xcc 0xcc
+// Ex Design test:      0xEE 0xFF 0x01 0x03  --    0xC0 0xF2  (run design tests)
+// Ex Reset SensorIDs:  0xEE 0xFF 0x01 0x04  --    0xC1 0xF3
+// Ex Store SensorIDs:  0xEE 0xFF 0x01 0x05  --    0xC2 0xF4
 //
-// Dallas ID data layout
-// |Index|   Sensor ID                  
-//   0x01 0x28 0xB7 0x20 0x1F 0x00 0x00 0x80 0x4A  
+// Set Sensor ID frame layout
+// |teValIndex|   Sensor ID                  
+//    0x01       0x28 0xB7 0x20 0x1F 0x00 0x00 0x80 0x4A  
 //
 //**************************************************************************
 //  RaspiDebugPrintln("checkRaspiComm");
@@ -216,7 +221,7 @@ void checkRaspiComm(){
         break;
       case WAITING_FOR_CHECKSUM_2:
         COM_0_checksum = COM_0_data[COM_0_datalen-2] << 8 | COM_0_data[COM_0_datalen-1];
-        if(true){ //COM_0_checksum == fletcher16(COM_0_data, COM_0_datalen-2)){
+        if(COM_0_checksum == fletcher16(COM_0_data, COM_0_datalen-2)){
           COM_0_STATE = VALID_FRAME_EXIST;
           switch(COMMAND){
             case PRINT:
@@ -228,13 +233,14 @@ void checkRaspiComm(){
             case SET_NEW_SENSOR:
               //recieved new Dallas Sensor ID
               if(DATALENGTH==0x0A){
-                if(DALLASINDEX < SIZE_OF_DALLAS_NETWORK){
-                  for(int i=0;i<8;i++)
-                    DallasNetwork[DALLASINDEX].ADDR[i]=COM_0_data[5+i];
+                if(COM_SENSOR_INDEX < NR_OF_SENSORS){
+                  UpdateSensorAddress((teValIndex)COM_SENSOR_INDEX, COM_SENSOR_ADDRESS);
+//                  for(int i=0;i<8;i++)
+//                    DallasNetwork[DALLASINDEX].ADDR[i]=COM_0_data[5+i];
                 }
                 else{
                   RaspiDebugPrint("COM_0 Set Dallas ID bad index: ");
-                  RaspiDebugPrintln(DALLASINDEX);
+                  RaspiDebugPrintln(COM_SENSOR_INDEX);
                 }
               }
               else{
@@ -244,12 +250,23 @@ void checkRaspiComm(){
               break;
             case RUN_DESIGN_TEST:
               DESIGN_TEST = true;
+              break;
+            case RESET_ALL_SENSOR_ID:
+              ResetAllSensorIDs();
+              break;
+            case STORE_SENSORS_TO_E2:
+              StoreSENSORS();
+              break;
             default:
               break;
           }
         }
         else{
           sendErrorToRaspi("COM_0 Bad Checksum");
+          RaspiPrint("Expected: ");
+          RaspiPrintln(fletcher16(COM_0_data, COM_0_datalen-2));
+          RaspiPrint("Recieved: ");
+          RaspiPrintln(COM_0_checksum);      
         }
         COM_0_resetBuffer();
         break;

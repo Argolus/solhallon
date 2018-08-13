@@ -1,7 +1,9 @@
 /*
  * Copyright (c) 2018, B3Labz
  * All rights reserved.
-
+ * 
+ * Class to handle 2oo3 voting
+ * 
  */
 
 #ifndef _COMVALUE_H
@@ -31,7 +33,7 @@ class COMValue{
       float Value() const;
       float Value(bool* safeValueUsed) const;
       unsigned long TimeStamp() const;
-      static float Vote(COMValue& a, COMValue& b, COMValue& c, float Tolerans,bool useLow);
+      static float Vote(COMValue& a, COMValue& b, COMValue& c, float Tolerance, bool useLow);
 };
 
 /*
