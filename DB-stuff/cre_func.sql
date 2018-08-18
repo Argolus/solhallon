@@ -1,0 +1,1 @@
+CREATE OR REPLACE FUNCTION sensorlabel(device_id) RETURNS varchar AS '

@@ -1,0 +1,17 @@
+UPDATE quantity SET q_letter='T' WHERE quantity_id=1;
+UPDATE quantity SET q_letter='P' WHERE quantity_id=2;
+UPDATE quantity SET q_letter='F' WHERE quantity_id=3;
+UPDATE quantity SET q_letter='M' WHERE quantity_id=4;
+UPDATE quantity SET q_letter='S' WHERE quantity_id=5;
+UPDATE quantity SET q_letter='I' WHERE quantity_id=6;
+UPDATE quantity SET q_letter='U' WHERE quantity_id=7;
+UPDATE quantity SET q_letter='L' WHERE quantity_id=8;
+UPDATE quantity SET q_letter='t' WHERE quantity_id=9;
+UPDATE quantity SET q_letter='f' WHERE quantity_id=10;
+UPDATE quantity SET q_letter='F' WHERE quantity_id=11;
+UPDATE quantity SET q_letter='E' WHERE quantity_id=12;
+UPDATE quantity SET q_letter='P' WHERE quantity_id=13;
+UPDATE quantity SET q_letter='B' WHERE quantity_id=14;
+UPDATE quantity SET q_letter='L' WHERE quantity_id=15;
+UPDATE quantity SET q_letter='X' WHERE quantity_id=16;
+UPDATE quantity SET q_letter='R' WHERE quantity_id=17;

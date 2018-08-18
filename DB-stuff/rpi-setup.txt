@@ -1,0 +1,107 @@
+Setup log Solar RPi2 B
+
+Använder Raspbian-jessie, image ligger på USB-stickan
+
+85.30.146.137 verkar vara m.e.m. statisk
+
+sudo raspi-config
+
+Change password for pi !!
+Enable ssh login
+
+sudo apt-get install mc
+
+sätt upp & montera USB stickan
+
+sudo mkdir /media/usbstick
+sudo chown -R jobac:jobac /media/usbstick
+sudo mount /dev/sda1 /media/usbstick
+
+sudo adduser solar (ra45%los#)
+sudo adduser anbac
+sudo adduser jobac
+sudo adduser jobac solar
+sudo adduser solar dialout
+sudo adduser jobac dialout
+sudo adduser anbac dialout
+sudo adduser anbac solar
+sudo apt-get update
+sudo apt-get upgrade
+
+remove user pi (after testing that anbac & jobac are sudo..)
+
+sätt upp statiskt IP
+/etc/dhcpcd.conf  add lines at end:
+
+interface eth0
+static ip_address=10.0.0.150
+static routers=10.0.0.1
+static domain_name_servers=10.0.0.1
+
+Remove root login (/etc/sshd/sshd_config  PermitRootLogin No)
+
+Setup fail2ban
+https://dvpizone.wordpress.com/2014/03/02/how-to-install-fail2ban-on-a-raspberry-pi/
+
+Setup minicom
+suod apt-get install minicom
+
+sudo apt-get install locate
+
+Se http://www.penguintutor.com/linux/light-webserver för "generella drag"
+
+sudo apt-get install lighttpd
+sudo chown www-data:www-data /var/www
+
+sudo chmod 775 /var/www
+sudo usermod -a -G www-data jobac
+sudo usermod -a -G www-data anbac
+
+Installera postgres, gärna den nyaste.... men 9.5 fanns inte f ARM (orkar inte kompilera)
+
+sudo apt-get install postgresql (ger 9.4)
+
+Installera PHP5:
+sudo apt-get install php5-common php-pear php5-cgi php5
+sudo apt-get install php5-pgsql
+sudo lighty-enable-mod fastcgi-php
+sudo service lighttpd force-reload
+
+Konfigurera:
+/etc/postgresql/9.4/main/
+On postgres.conf set listen_addresses = ‘*’. 
+On pg_hga.conf set from where the incoming connections will be accepted. 
+host all all localhost md5 (testa...)
+
+create a password for the postgres user. 
+
+sudo -iu postgres psql -c "\password postgres" (frums60)
+
+sudo usermod -a -G dialout www-data (ger webservern läsrätt på ttyAMA0 - glöm inte starta om webservern!)
+Fast fÃ¶r RPi-3 sÃ¥ Ã¤r det
+sudo usermod -a -G tty www-data (ger webservern läsrätt på ttyS0 - glöm inte starta om webservern!)
+
+create user solar with password 'ralos';
+create user jobac,anbac with password ....;
+
+clear .psql_history in home
+
+create database solar with owner solar;
+\i /.../ createdb.sql
+
+Add crontab entry, gives daytime 07-21 and every 10 minutes. To be replaced by the py script(s):
+05,15,25,35,45,55 07-21 * * * /usr/bin/wget -O - -q -t 1 http://localhost/data_to_db.php >/dev/null 2>&1
+
+remove unused large software
+
+sudo apt-get purge wolfram-engine
+sudo apt-get clean
+sudo apt-get autoremove
+
+sudo apt-get remove --purge libreoffice*
+sudo apt-get clean
+sudo apt-get autoremove
+
+sudo apt-get install python-psycopg2
+
+sudo apt-get install tightvncserver

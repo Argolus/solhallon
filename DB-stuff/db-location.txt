@@ -1,0 +1,22 @@
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (1,'SPI','Solar panels, inlet','Dykrör','TK1SS');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (2,'SPM','Solar panels, inbetween','Dykrör i S1(?)','TM1SS');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (3,'SPO','Solar panels, outlet','This should be hottest point in system when sunny','TV1SS');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (4,'RFA','Roof: free air',' ','TA');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (5,'REB','Roof equipment box',' ','TU');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (6,'SET','Solar circuit expansion tank',' ','MSE');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (7,'SPA','Solar pump assembly',' ','CPS');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (8,'SHO','Solar heat-exchanger outlet',' ','TK2SS');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (9,'SHI','Solar heat-exchanger inlet',' ','TV2SS');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (10,'SST','Solar circuit security tank','Jeepdunk..','WST');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (11,'ATM','Ackumulator tank, mid level','Dykrör','TMA');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (12,'ATL','Ackumulator tank, low level','Dykrör mellan SHI och SHO','TKA_D');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (13,'TER','Technology room',' ','WF');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (14,'ARP','Ackumulator tank, HE return pipe',' ','TKI');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (15,'HTO','Heatexchanger tankwater out',' ','TDU');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (16,'HDI','Heatexchanger dom. water in',' ','TVI');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (17,'HDO','Heatexchanger dom. water out',' ','TVU');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (18,'HTI','Heatexchanger tankwater in',' ','TDI');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (19,'ATO','Ackumulator tank out',' ','TVA');
+INSERT INTO location (location_id,abbreviation,location_description,comment,old_label) VALUES (20,'VOD','Valve overheat dump',' ','TVD');
+INSERT INTO location (,abbreviation,location_description,comment,old_label) VALUES (21,'DHT','Dom. water heater',' ','TVVB_PT');
+
