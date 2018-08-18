@@ -1,0 +1,31 @@
+ADI	Ansvarig	Status	Beskrivning			 
+---	---------	------	-----------------------
+ A	Johan		Fixat	Kolla att överhettningsskyddet funkar
+ A	Andreas			Se till att vi får ut värme ur acktanken när man tappar varmvatten i kranen
+ A  	JOhan		Fixat	 - Fixa till databasen så den blir användbar
+ A	Andreas			 - Programmera om Max32 och Arduino på taket till att skicka ID+värde istf tag+värde
+ A 	Andreas			 - Avkoda seriedata i pajjen och lägg in värden i databasen
+
+ A  	JOhan			Fixa operatörspanel på hemsidan, med livedata för alla temperaturer
+ A	Andreas			Logga vårat arbete, skriv en anekdotisk lista...
+ A	Johan			Lägg anekdoterna på pajjen
+ D	-			För att kunna tweaka system behöver vi en bra loggning av alla parametrar, tex temp, states på pumpar etc Kom ihåg cirkulationspumpen på solslingan
+ A	Andreas			Kopiera och modda limnotip-servicen
+ I	-			Vi borde mönsterskydda B3labz
+ A	Johan			fixa en fräck logga
+ A	JOhan			fixa pumparna så de kan varvtalsstyras
+ A  	Johan			Fixa code repository på pajjen
+ A 	Johan			Gör ett nytt grönt kort
+ A	Johan			Rita ett elschema
+
+
+
+Ändra designprincipen på MAX32-mjukvaran till att utgå från "säker operation":
+
+Solpumpen/SCP ska ALLTID gå, utom när man "säkert" kan veta att (det är natt, tanken är varm, etc.etc
+Nödkylventilen/TCP ALLTID öppen utom när tankbottentemp < 95grader eller ....
+
+
+Spara data "mycket oftare"i temporärtabell (typ varje seriebuffertömning - varannan sekund?) och för över data till DB vid timeout eller när värdet ändrats mer än [tröskel].
+
+Webview etc. uppdateras från temporärtabell.
