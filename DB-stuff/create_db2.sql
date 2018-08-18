@@ -110,6 +110,7 @@ CREATE TABLE devicetype (
 GRANT INSERT ON devicetype TO solar;
 GRANT SELECT ON devicetype TO public;
 
+INSERT INTO devicetype (devicetype_id, device_class) VALUES (0,'No device');
 INSERT INTO devicetype (devicetype_id, device_class) VALUES (1,'Sensor');
 INSERT INTO devicetype (devicetype_id, device_class) VALUES (2,'Valve');
 INSERT INTO devicetype (devicetype_id, device_class) VALUES (3,'Pump');
@@ -119,6 +120,7 @@ INSERT INTO devicetype (devicetype_id, device_class) VALUES (6,'Computer');
 INSERT INTO devicetype (devicetype_id, device_class) VALUES (7,'Solar panel');
 INSERT INTO devicetype (devicetype_id, device_class) VALUES (8,'Pipe section');
 INSERT INTO devicetype (devicetype_id, device_class) VALUES (9,'Heat exchanger');
+INSERT INTO devicetype (devicetype_id, device_class) VALUES (10,'Circulator pump');
 -- INSERT INTO devicetype (devicetype_id, device_class) VALUES (1,'');
 -- INSERT INTO devicetype (devicetype_id, device_class) VALUES (1,'');
 
