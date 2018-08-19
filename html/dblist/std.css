@@ -1,0 +1,82 @@
+
+	body {	background-color : #FFF;
+	        margin : 2em;
+		font-family : Verdana, Arial, Helvetica, Sans-serif;
+		font-size : 12px;
+		}
+	img	{ border : 0px;
+		}
+	h2 {	font-family : Times, "Times New Roman", Serif;
+		font-size : 22px;
+		letter-spacing : 0.20em;
+		background-color : #D4D0C8;
+		color : #000;
+		padding : 0.5em;
+		}
+	h3 {
+		font-family : Arial, Helvetica, Verdana, Sans-serif;
+		font-size : 18px;
+		border-bottom : 1px solid #A52A2A;
+		margin-top : 2.5em;
+		letter-spacing : 0.20em;
+		}
+	h4 {
+		font-family : Verdana, Arial, Helvetica, Sans-serif;
+		font-size : 13px;
+		font-weight : bold;
+		}
+	p.pcenter { 
+		left : auto;
+		right : auto;
+		text-align : center;
+		}
+	a	{
+		text-decoration : underline;
+		}
+	a:hover {
+		text-decoration : underline;
+		color : #F00;
+		background-color : #CFC;
+		}
+	table   {
+		font-family : Verdana,Arial,Helvetica,Sans-serif;
+		font-size : 12px;
+		}
+	tbody#sum
+		{
+		 background-color : #D4D0C8;
+		 border : 1px solid #C4C0B8;
+		}
+	th	{ padding:         0.7em 0.7em;
+		  padding-top :    0.2em;
+		  padding-bottom : 0.9em; 
+		}
+	tr	{ border-bottom: 1px solid black;
+		}
+	tr.o    {
+		background-color : #DDD;
+		}
+	td	{ text-align : right;
+		  padding-top: 0.6em;
+		  padding-bottom : 0.3em;
+		  padding-right : 5px;
+		}
+	td.lal, td.strthr 
+		{ text-align : left;
+	          padding-left : 5px;
+		  border-left : 1px solid #999;
+		}
+	td.strthr
+		{ text-decoration : line-through;
+		  font-weight : bold;
+		}
+	ul#none	{
+		  list-style: none;
+		}  
+	ul li 	{ 
+		  margin-top : 0.6em; 
+		} 
+	em.new { font-style : normal;
+	         font-weight : bold;
+		 color : #F00;
+	}
