@@ -136,6 +136,7 @@ float COMValue::Vote(COMValue& a, COMValue& b, COMValue& c, float Tolerance,bool
 
 }
 
+
 /********************** CV_VOTER ************************ /
 void CV_Voter::addValue(const COMValue& v){
   if(_nbr==0){

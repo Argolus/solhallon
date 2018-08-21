@@ -64,6 +64,16 @@ teValIndex SensorIndex(byte SensorID[]){
     found = IsEqualSensorID(SENSORS[i].ADDR, SensorID);
     if(!found) i++;
   }while(!found && i<NR_OF_SENSORS);  
+  if(!found){
+    sendErrorToRaspi("SensorIndex not found: ");
+    RaspiPrint(byteAsHexString(SensorID[0],false));
+    for(int j=1; j<8; j++){
+      RaspiPrint("-");
+      RaspiPrint(byteAsHexString(SensorID[j],false));
+    }
+    RaspiPrintln();
+    return NR_OF_SENSORS;
+  }
   return (teValIndex)i;  
 }
 
@@ -74,6 +84,7 @@ boolean IsEqualSensorID(byte Sensor1[], byte Sensor2[]){
     LengthOfID--;
     IsEqual = Sensor1[LengthOfID] == Sensor2[LengthOfID];
   }while(LengthOfID>0 && IsEqual);
+  return IsEqual;
 }  
 
 

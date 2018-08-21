@@ -33,6 +33,7 @@ void setup(void) {
   Wire.begin(); // join i2c bus (address optional for master)
   delay(20);
   LoadSENSORS();
+  InitCOMValues();
 }
 
 /************************************************************************
@@ -42,10 +43,10 @@ void loop(void) {
   ScanOneWire();  // Uppdatera Dallas sensor
   PollSerial();   // Ta emot seriell data fr taket
   ReadLocalIO();  // Lokala I/O
-  DebugPrint();   
   ConvertTemp();  
   ConvertFlow();
   DoControl();   
+  DebugPrint();   
   
   checkRaspiComm(); //Kolla om nytt kommando fr RaspberryPI?
   delay(200);
@@ -205,4 +206,15 @@ void CPVV_Enable(boolean ON, int32_t nutid){
   }
 }
 
+void InitCOMValues(){
+  COM_1_TV1SS.setSafeValue(110.0, 30000);
+  COM_2_TV1SS.setSafeValue(110.0, 30000);
+  COM_3_TV1SS.setSafeValue(110.0, 30000);
+  COM_1_TM1SS.setSafeValue(110.0, 30000);
+  COM_2_TM1SS.setSafeValue(110.0, 30000);
+  COM_3_TM1SS.setSafeValue(110.0, 30000);
+  COM_1_TK1SS.setSafeValue(110.0, 30000);
+  COM_2_TK1SS.setSafeValue(110.0, 30000);
+  COM_3_TK1SS.setSafeValue(110.0, 30000);
+}
 

@@ -126,6 +126,12 @@ void RaspiDebugPrintln(int32_t value){
   if(dbgPrint == 1)
     tx_0.println(value);
 }
+void RaspiPrintln(COMValue& obj){
+    tx_0.print(obj.Value());
+    tx_0.print(" ** ");
+    tx_0.println(obj.TimeStamp());
+}
+
 void RaspiDebugPrintln(COMValue& obj){
   if(dbgPrint == 1){
     tx_0.print(obj.Value());
@@ -133,7 +139,6 @@ void RaspiDebugPrintln(COMValue& obj){
     tx_0.println(obj.TimeStamp());
   }
 }
-
 void sendValueToRaspi(String sensorID, float temp){
   RaspiPrint(sensorID); RaspiPrint("  "); RaspiPrintln(temp);
 }
@@ -172,8 +177,8 @@ void COM_0_resetBuffer(){
 void checkRaspiComm(){
 //**************************************************************************
 // Frame layout:       | H1 | H2 |Len |Cmd | data | CRC     |
-// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x01  0xB4 0xF3  (RaspiDebugPrint)
-// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x02  0xcc 0xcc  (DebugPrint)
+// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x01  0xB3 0xF2  (RaspiDebugPrint)
+// Ex DebugPrint:       0xEE 0xFF 0x02 0x01  0x02  0xB4 0xF3  (DebugPrint)
 // Ex Set SensorID:     0xEE 0xFF 0x0A 0x02  DATA  0xcc 0xcc
 // Ex Design test:      0xEE 0xFF 0x01 0x03  --    0xC0 0xF2  (run design tests)
 // Ex Reset SensorIDs:  0xEE 0xFF 0x01 0x04  --    0xC1 0xF3
