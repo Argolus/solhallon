@@ -38,7 +38,11 @@ bool DESIGN_TEST = false;
 #define FL_VV_IN   02    // RE8 - INT1  fl�desm�tare tappvarmvatten inkommande
 #define FL_PVV     03    // RD0 - INT0  fl�desm�tare tanksida plattv�rmev�xlare
 #define FL_SOL     07    // RE9 - INT2  fl�desm�tare solslinga
- 
+//      RX0        00    // Komm med RPi
+//      TX0        01    // Komm med RPi
+//      RX1        19    // Komm med Taket
+//      RX2        17    // Komm med Taket
+//      RX3        15    // Komm med Taket
 
 //#define PCF8591 (0x90 >> 1) // I2C bus address
 
