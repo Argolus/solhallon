@@ -63,7 +63,7 @@ void COM_1_pollSerial(){
           COM_1_STATE = VALID_FRAME_EXIST;
           COM_1_getID();
           temp = COM_1_getTemp();
-          RaspiPrint("COM_1: ");
+//          RaspiPrint("COM_1: ");
           sendValueToRaspi(COM_1_ID_String, temp);
  //         if(COM_1_data[10] != 0x1A && COM_1_data[10] != 0x67 && COM_1_data[10] != 0xFC){
  //           RaspiPrint("!!!! COM1 Err ");

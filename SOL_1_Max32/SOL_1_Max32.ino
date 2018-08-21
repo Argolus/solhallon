@@ -163,9 +163,9 @@ void CPVV_Enable(boolean ON, int32_t nutid){
     RaspiDebugPrint("TVI_T "); RaspiDebugPrintln(TVI_T);
     RaspiDebugPrint("TDU_T "); RaspiDebugPrintln(TDU_T);
     if(CPVV_ON == true)
-      RaspiDebugPrintln("CPVV_ON = true");
+      RaspiDebugPrintln("HTO_CP = true");
     else
-      RaspiDebugPrintln("CPVV_ON = false");
+      RaspiDebugPrintln("HTO_CP = false");
     RaspiDebugPrint("(lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid) =>  "); RaspiDebugPrintln(lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid);
 //<- End Debug Print ->
 

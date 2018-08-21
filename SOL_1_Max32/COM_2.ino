@@ -57,7 +57,7 @@ void COM_2_pollSerial(){
         //  COM2_NEW_DATA++;
           COM_2_getID();
           temp = COM_2_getTemp();
-          RaspiPrint("COM_2: ");
+//          RaspiPrint("COM_2: ");
           sendValueToRaspi(COM_2_ID_String, COM_2_getTemp());
           switch(SensorIndex(&COM_2_data[3])){
             case SOLAR_OUTLET_COM2:

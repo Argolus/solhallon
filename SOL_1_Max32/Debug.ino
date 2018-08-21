@@ -32,10 +32,10 @@ void DebugPrint(){
   RaspiPrint("     SPI_T2 : ");RaspiPrintln(COM_2_TK1SS);
   RaspiPrint("     SPI_T3 : ");RaspiPrintln(COM_3_TK1SS);
   RaspiPrintln();
-  RaspiPrint("     CSS_ON    : ");RaspiPrintln(CSS_ON);
-  RaspiPrint("     CPVV_ON   : ");RaspiPrintln(CPVV_ON);
-  RaspiPrint("     FFV_ON    : ");RaspiPrintln(FFV_ON);
-  RaspiPrint("     DUMP_OPEN : ");RaspiPrintln(DUMP_OPEN);
+  RaspiPrint("     SPA_CP    : ");RaspiPrintln(CSS_ON);
+  RaspiPrint("     HTO_CP    : ");RaspiPrintln(CPVV_ON);
+  RaspiPrint("     HDI_S1    : ");RaspiPrintln(FFV_ON);
+  RaspiPrint("     HDI_S1    : ");RaspiPrintln(DUMP_OPEN);
   RaspiPrintln();
   RaspiPrint("     FSOL  : ");RaspiPrintln(FSOL);
   RaspiPrint("     FTANK : ");RaspiPrintln(FTANK);
