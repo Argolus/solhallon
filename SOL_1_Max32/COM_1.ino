@@ -72,8 +72,8 @@ void COM_1_pollSerial(){
           switch(SensorIndex(&COM_1_data[3])){
             case SOLAR_OUTLET_COM1:
               COM_1_TV1SS.setValue(temp);
-              RaspiPrint("SPO_T1 ");
-              RaspiPrintln(temp); 
+//              RaspiPrint("SPO_T1 ");
+//              RaspiPrintln(temp); 
               break;
             case SOLAR_MID_COM1:
               COM_1_TM1SS.setValue(temp);
