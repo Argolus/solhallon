@@ -61,16 +61,16 @@ void COM_2_pollSerial(){
           sendValueToRaspi(COM_2_ID_String, COM_2_getTemp());
           switch(SensorIndex(&COM_2_data[3])){
             case SOLAR_OUTLET_COM2:
-              COM_2_TV1SS.setValue(temp);
-//              RaspiPrintln("COM_2 TV1SS"); 
+              COM_2_SolarPanel_Out_Temp_1.setValue(temp);
+//              RaspiPrintln("COM_2 SolarPanel_Out_Temp_1"); 
               break;
             case SOLAR_MID_COM2:
-              COM_2_TM1SS.setValue(temp);
-//              RaspiPrintln("COM_2 TM1SS"); 
+              COM_2_SolarPanel_Mid_Temp.setValue(temp);
+//              RaspiPrintln("COM_2 SolarPanel_Mid_Temp"); 
               break;
             case SOLAR_INLET_COM2:
-              COM_2_TK1SS.setValue(temp);
-//              RaspiPrintln("COM_2 TK1SS"); 
+              COM_2_SolarPanel_In_Temp_1.setValue(temp);
+//              RaspiPrintln("COM_2 SolarPanel_In_Temp 1"); 
               break;
            default:
               RaspiDebugPrintln("COM_2 Unknown"); 

@@ -1,5 +1,5 @@
-#include <Pipe.h>
-#include <COMValue.h>
+#include "Pipe.h"
+#include "COMValue.h"
 // 
 //  Konstanter och globala variabler f�r Johans solsystem
 //
@@ -8,8 +8,8 @@ bool DESIGN_TEST = false;
 
 // Dallas 1-wire adresser == Index i DallasNetwork[]
 //#define _TKA   0      // Värmevatten inne i acktanken (dykr�r mellan solslinga in/ut)
-//#define _TK2SS 1      // Solslinga ut (nere) fr�n acktank (dykr�r)
-//#define _TV2SS 2      // Solslinga in till acktank (givare p� r�ret)
+//#define _SolarPanel_In_Temp_2 1      // Solslinga ut (nere) fr�n acktank (dykr�r)
+//#define _SolarPanel_Out_Temp_2 2      // Solslinga in till acktank (givare p� r�ret)
 //#define _TVA   3      // V�rmevatten ut (uppe) fr�n pannan p� varmvattensidan
 //#define _TDI   4      // V�rmevatten in (uppe) till tappvarmvattenautomat
 //#define _TDU   5      // V�rmevatten ut (nere) fr�n tappvarmvattenautomat
@@ -22,15 +22,15 @@ bool DESIGN_TEST = false;
 //#define _TMA   12     // Dykr�r ovanf�r solslinga i acktank
 //
 //// I/O pinnar
-#define CSS        29    // RG7    Cirkpunp SolSlinga
-#define CPVV       31    // RE6    Cirkpump PlattV�rmeV�xlare
-#define VVD        35    // RE2    Ventil VarmvattenDump
-#define VPVV       37    // RE0    Ventil PlattV�rmeV�xlare
-#define AI_PIN_G1  54    // RB0
-#define AI_PIN_G2  55    // RB1
-#define AI_PIN_G3  56    // RB2
-#define BUS        77    // RD7    1-wire
-#define FVV        75    // RC13   fl�desvakt tappvarmvatten
+#define Sol_CP       29    // RG7    Cirkpunp SolSlinga
+#define HeatEx_CP    31    // RE6    Cirkpump PlattV�rmeV�xlare
+#define DumpValve    35    // RE2    Ventil VarmvattenDump
+#define HeatExValve  37    // RE0    Ventil PlattV�rmeV�xlare
+#define AI_PIN_G1    54    // RB0
+#define AI_PIN_G2    55    // RB1
+#define AI_PIN_G3    56    // RB2
+#define BUS          77    // RD7    1-wire
+#define FVV          75    // RC13   fl�desvakt tappvarmvatten
 
 #define MUX_ADR_A  49    // RD11
 #define MUX_ADR_B  51    // RG8
@@ -38,64 +38,72 @@ bool DESIGN_TEST = false;
 #define FL_VV_IN   02    // RE8 - INT1  fl�desm�tare tappvarmvatten inkommande
 #define FL_PVV     03    // RD0 - INT0  fl�desm�tare tanksida plattv�rmev�xlare
 #define FL_SOL     07    // RE9 - INT2  fl�desm�tare solslinga
- 
+
+#define ON          true
+#define OFF         false
+#define OPEN        HIGH
+#define CLOSE       LOW
+#define IS_OPEN     true
+#define IS_CLOSED   false
+#define FLOW_EXISTS HIGH
+
 
 //#define PCF8591 (0x90 >> 1) // I2C bus address
 
 const char SEPARATOR = '-';
 unsigned int raw;
-float temp, TKA_T, TDU_T, TVI_T; //, TM1SS, TK1SS, TU, TA // , TV2SS, TK2SS, , TVA, TDI, TVU, TR, TVD;
-uint16_t TV1SS_PT;
-uint16_t TVVB_PT;               // PT100 givare p� varmvattenberendare
-uint16_t PSS, PTANK;
-float FVVB, FTANK, FSOL;      // fl�de f�r ink vv, tankvatten genom v�rmev�xlare, solslinga 
-const int TVVB_PT_CH  = 1;    // adress f�r PT100-givare TVVB_PT (LimnoTip-kort kanal 1, grupp 1)
-const int TV1SS_PT_CH = 2;    // adress f�r PT100-givare TV1SS_PT (LimnoTip-kort kanal 0, grupp 1) 
-const int PSS_CH  = 3;        // adress f�r tryckgivare solslinga
-const int PTANK_CH = 4;       // adress f�r tryckgivare acktank
+float temp, AckTank_Bot_Temp_1, HeatEx_TankWater_Out_Temp, HeatEx_TapWater_In_Temp; //, SolarPanel_Mid_Temp, SolarPanel_In_Temp 1, Roof_EqBox_Temp, Roof_Air_Temp // , SolarPanel_Out_Temp_2, SolarPanel_In_Temp_2, , TVA, TDI, TVU, TR, TVD;
+uint16_t SolarPanel_Out_Temp_1_PT;
+uint16_t TapWater_Temp_PT;               // PT100 givare p� varmvattenberendare
+uint16_t SolHeatEx_Out_Pressure, AckTank_Out_Pressure;
+float TapWater_Flow, AckTank_HeatEx_Flow, SolHeatEx_Flow;      // fl�de f�r ink vv, tankvatten genom v�rmev�xlare, solslinga 
+const int TapWater_Temp_PT_Address = 1;    // adress f�r PT100-givare TapWater_Temp_PT (LimnoTip-kort kanal 1, grupp 1)
+const int SolarPanel_Out_Temp_1_PT_Address = 2;    // adress f�r PT100-givare SolarPanel_Out_Temp_1_PT (LimnoTip-kort kanal 0, grupp 1) 
+const int SolHeatEx_Out_Pressure_Address  = 3;        // adress f�r tryckgivare solslinga
+const int AckTank_Out_Pressure_Address = 4;       // adress f�r tryckgivare acktank
  
 //----------------------------------------
 // Temperaturkonstanter
 //----------------------------------------
-const float SS_DIFF_START = 3.0;
-const float SS_DIFF_STOP  = 1.0;
-const float VV_DUMP_OPEN = 88.0;
-const float VV_DUMP_CLOSE = 83.0;
+const float HeatEx_CP_Temp_Diff_START = 3.0;
+const float HeatEx_CP_Temp_Diff_STOP  = 1.0;
+const float DUMP_OPEN_TEMP = 88.0;
+const float DUMP_CLOSE_TEMP = 83.0;
 //const float MAX_DIFF_PVV = 3.0;   // Max till�ten tempdiff mellan kallsida plattv�rmev�xlare och inkommande kallvatten
-const float START_TEMP_PVV = 18.0;  // Starta cirkpump om inkommande kallvatten kallare 
+const float START_TEMP_HEATEX = 18.0;  // Starta cirkpump om inkommande kallvatten kallare 
 
-unsigned long CPVV_MIN_RUNTIME = 4000; // Minimal g�ngtid f�r CPVV (enhet ms)
-unsigned long CPVV_MIN_OFFTIME = 4000; // Minimal stopptid f�r CPVV (enhet ms)
+unsigned long HeatEx_CP_MIN_RUNTIME = 4000; // Minimal g�ngtid f�r HeatEx_CP (enhet ms)
+unsigned long HeatEx_CP_MIN_OFFTIME = 4000; // Minimal stopptid f�r HeatEx_CP (enhet ms)
 float TakTolerans = 2.0;
 
-boolean FFV_ON = false;        
-boolean CSS_ON = false;
-boolean DUMP_OPEN = false;
-boolean CPVV_ON = false;
-int iFVV = LOW;
+boolean TapWater_State_LocalVar = OFF;        
+boolean Sol_CP_State = OFF;
+boolean DumpValve_State = false;
+boolean HeatEx_CP_State = OFF;
+int TapWater_State = LOW;
 
-volatile int FlowCount_FVVB;
-volatile unsigned long FlowCount_FTANK;
-volatile unsigned long FlowCount_FSOL;
+volatile int FlowCount_TapWater_Flow; // FlowCount_TapWater_Flow;
+volatile unsigned long FlowCount_AckTank_HeatEx_Flow; // FlowCount_AckTank_HeatEx_Flow;
+volatile unsigned long FlowCount_SolHeatEx_Flow; // FlowCount_SolHeatEx_Flow;
 unsigned long oldFlowConvTime;
-volatile int currentFlowCount_FVVB;
-volatile unsigned long currentFlowCount_FTANK;
-volatile unsigned long currentFlowCount_FSOL;
+volatile int currentFlowCount_TapWater_Flow; //currentFlowCount_TapWater_Flow;
+volatile unsigned long currentFlowCount_AckTank_HeatEx_Flow; //currentFlowCount_AckTank_HeatEx_Flow;
+volatile unsigned long currentFlowCount_SolHeatEx_Flow; //currentFlowCount_SolHeatEx_Flow;
 
 //----------------------------------------
 // Kommunikation med taket
 //----------------------------------------
 
-COMValue COM_1_TV1SS, COM_1_TM1SS, COM_1_TK1SS, COM_1_TU, COM_1_TA;
-COMValue COM_2_TV1SS, COM_2_TM1SS, COM_2_TK1SS; //, COM_2_TU, COM_2_TA;
-COMValue COM_3_TV1SS, COM_3_TM1SS, COM_3_TK1SS; //, COM_3_TU, COM_3_TA;
-float TV1SS, TM1SS, TK1SS, TU, TA;
+COMValue COM_1_SolarPanel_Out_Temp_1, COM_1_SolarPanel_Mid_Temp, COM_1_SolarPanel_In_Temp_1, COM_1_Roof_Air_Temp, COM_1_Roof_EqBox_Temp;
+COMValue COM_2_SolarPanel_Out_Temp_1, COM_2_SolarPanel_Mid_Temp, COM_2_SolarPanel_In_Temp_1; //, COM_2_Roof_Air_Temp, COM_2_Roof_EqBox_Temp;
+COMValue COM_3_SolarPanel_Out_Temp_1, COM_3_SolarPanel_Mid_Temp, COM_3_SolarPanel_In_Temp_1; //, COM_3_Roof_Air_Temp, COM_3_Roof_EqBox_Temp;
+float SolarPanel_Out_Temp_1, SolarPanel_Mid_Temp, SolarPanel_In_Temp_1, Roof_EqBox_Temp, Roof_Air_Temp;
 
-const byte ID_TV1SS = 0x08;  // Seriellt - Solslinga varmsida, ut fr�n solf�ngare
-const byte ID_TM1SS = 0xE8;  // Seriellt - Solslinga mellan solf�ngarna
-const byte ID_TK1SS = 0x57;  // Seriellt - Solslinga kallsida in till solf�ngare
-const byte ID_TU = 0x5A;     // Seriellt - Utetemp p� taket
-const byte ID_TA = 0x7C;     // Seriellt - Temp i Arduino-dosan p� taket
+const byte ID_SolarPanel_Out_Temp_1 = 0x08;  // Seriellt - Solslinga varmsida, ut fr�n solf�ngare
+const byte ID_SolarPanel_Mid_Temp = 0xE8;  // Seriellt - Solslinga mellan solf�ngarna
+const byte ID_SolarPanel_In_Temp_1 = 0x57;  // Seriellt - Solslinga kallsida in till solf�ngare
+const byte ID_Roof_Air_Temp = 0x5A;     // Seriellt - Utetemp p� taket
+const byte ID_Roof_EqBox_Temp = 0x7C;     // Seriellt - Temp i Arduino-dosan p� taket
 
 #define SizeOfID 30
 char COM_1_ID_String[SizeOfID];

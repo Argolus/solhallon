@@ -11,10 +11,10 @@ void setup(void) {
   pinMode(FVV, INPUT);
 //  mPORTBSetPinsAnalogIn(0x0007);   // RB0,1,2 (D54 (AN0), D55 (AN1), D56 (AN2))
   pinMode(BUS, OUTPUT);
-  pinMode(CPVV, OUTPUT);
-  pinMode(VVD, OUTPUT);
-  pinMode(VPVV, OUTPUT); 
-  pinMode(CSS, OUTPUT);
+  pinMode(HeatEx_CP, OUTPUT);
+  pinMode(DumpValve, OUTPUT);
+  pinMode(HeatExValve, OUTPUT); 
+  pinMode(Sol_CP, OUTPUT);
   pinMode(MUX_ADR_A, OUTPUT);
   pinMode(MUX_ADR_B, OUTPUT);
   pinMode(MUX_ADR_C, OUTPUT); 
@@ -23,7 +23,7 @@ void setup(void) {
   pinMode(FL_SOL, INPUT);
   Serial.begin(115200); // Till Raspberryn  
   Serial1.begin(9600); // Tak 1
-  Serial2.begin(9600); // Tak 2 Arduino på taket, TV1SS, TM1SS, TK1SS, TU, TA
+  Serial2.begin(9600); // Tak 2 Arduino på taket, SolarPanel_Out_Temp_1, SolarPanel_Mid_Temp, SolarPanel_In_Temp 1, Roof_EqBox_Temp, Roof_Air_Temp
   Serial3.begin(9600); // Tak 3
   configureInterrupts();
   RaspiPrint("\n-------\nB3Labz Solhallon version ");
@@ -57,11 +57,11 @@ void loop(void) {
 ************************************************************************/
 
 void ReadLocalIO(){
-  TVVB_PT = ReadAnalog(AI_PIN_G1, TVVB_PT_CH);
-  TV1SS_PT = ReadAnalog(AI_PIN_G1, TV1SS_PT_CH);
-  PSS = ReadAnalog(AI_PIN_G1, PSS_CH);
-  PTANK = ReadAnalog(AI_PIN_G1, PTANK_CH);
-  iFVV = digitalRead(FVV);  
+  TapWater_Temp_PT = ReadAnalog(AI_PIN_G1, TapWater_Temp_PT_Address);
+  SolarPanel_Out_Temp_1_PT = ReadAnalog(AI_PIN_G1, SolarPanel_Out_Temp_1_PT_Address);
+  SolHeatEx_Out_Pressure = ReadAnalog(AI_PIN_G1, SolHeatEx_Out_Pressure_Address);
+  AckTank_Out_Pressure = ReadAnalog(AI_PIN_G1, AckTank_Out_Pressure_Address);
+  TapWater_State = digitalRead(FVV);  
 }
 
 void PollSerial(){
@@ -74,18 +74,18 @@ void PollSerial(){
 }
 
 void ConvertTemp(void){
-  TV1SS = COMValue::Vote(COM_1_TV1SS, COM_2_TV1SS, COM_3_TV1SS, TakTolerans, false);
-  TM1SS = COMValue::Vote(COM_1_TM1SS, COM_2_TM1SS, COM_3_TM1SS, TakTolerans, false);
-  TK1SS = COMValue::Vote(COM_1_TK1SS, COM_2_TK1SS, COM_3_TK1SS, TakTolerans, true);
-  TU = COM_1_TU.Value(); //, COM_2_TU, COM_3_TU);
-  TA = COM_1_TA.Value(); //, COM_2_TA, COM_3_TA);
+  SolarPanel_Out_Temp_1 = COMValue::Vote(COM_1_SolarPanel_Out_Temp_1, COM_2_SolarPanel_Out_Temp_1, COM_3_SolarPanel_Out_Temp_1, TakTolerans, false);
+  SolarPanel_Mid_Temp = COMValue::Vote(COM_1_SolarPanel_Mid_Temp, COM_2_SolarPanel_Mid_Temp, COM_3_SolarPanel_Mid_Temp, TakTolerans, false);
+  SolarPanel_In_Temp_1 = COMValue::Vote(COM_1_SolarPanel_In_Temp_1, COM_2_SolarPanel_In_Temp_1, COM_3_SolarPanel_In_Temp_1, TakTolerans, true);
+  Roof_EqBox_Temp = COM_1_Roof_Air_Temp.Value(); //, COM_2_Roof_Air_Temp, COM_3_Roof_Air_Temp);
+  Roof_Air_Temp = COM_1_Roof_EqBox_Temp.Value(); //, COM_2_Roof_EqBox_Temp, COM_3_Roof_EqBox_Temp);
 
 //<- Debug Print ->
-  RaspiDebugPrint(COM_1_TV1SS);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_2_TV1SS);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_3_TV1SS);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(TV1SS);
-  RaspiDebugPrint(COM_1_TM1SS);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_2_TM1SS);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_3_TM1SS);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(TM1SS);
-  RaspiDebugPrint(COM_1_TK1SS);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_2_TK1SS);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_3_TK1SS);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(TK1SS);
-  RaspiDebugPrint(COM_1_TU);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(TU);
-  RaspiDebugPrint(COM_1_TA);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(TA);
+  RaspiDebugPrint(COM_1_SolarPanel_Out_Temp_1);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_2_SolarPanel_Out_Temp_1);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_3_SolarPanel_Out_Temp_1);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(SolarPanel_Out_Temp_1);
+  RaspiDebugPrint(COM_1_SolarPanel_Mid_Temp);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_2_SolarPanel_Mid_Temp);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_3_SolarPanel_Mid_Temp);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(SolarPanel_Mid_Temp);
+  RaspiDebugPrint(COM_1_SolarPanel_In_Temp_1);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_2_SolarPanel_In_Temp_1);  RaspiDebugPrint(" :: ");  RaspiDebugPrint(COM_3_SolarPanel_In_Temp_1);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(SolarPanel_In_Temp_1);
+  RaspiDebugPrint(COM_1_Roof_Air_Temp);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(Roof_EqBox_Temp);
+  RaspiDebugPrint(COM_1_Roof_EqBox_Temp);  RaspiDebugPrint(" => ");  RaspiDebugPrintln(Roof_Air_Temp);
 //<- End Debug Print -> 
 }
 
@@ -93,116 +93,125 @@ float FlowMeterCalibrationFactor = 500;  //  pulses / lit
 
 void ConvertFlow(void){
   if((millis() - oldFlowConvTime) > 1000){
-    FVVB = currentFlowCount_FVVB;   // * 60 / FlowMeterCalibrationFactor;
-    FTANK = currentFlowCount_FTANK; // * 60 / FlowMeterCalibrationFactor;
-    FSOL = currentFlowCount_FSOL;   // * 60 / FlowMeterCalibrationFactor;
-    RaspiPrint("HDI_F1  "); RaspiPrintln(FVVB,2);
-    RaspiPrint("ARP_F1 ");  RaspiPrintln(FTANK,2);
-    RaspiPrint("SHO_F1  "); RaspiPrintln(FSOL,2);
-    currentFlowCount_FVVB = 0;
-    currentFlowCount_FTANK = 0; 
-    currentFlowCount_FSOL = 0;  
+    TapWater_Flow = currentFlowCount_TapWater_Flow;   // * 60 / FlowMeterCalibrationFactor;
+    AckTank_HeatEx_Flow = currentFlowCount_AckTank_HeatEx_Flow; // * 60 / FlowMeterCalibrationFactor;
+    SolHeatEx_Flow = currentFlowCount_SolHeatEx_Flow;   // * 60 / FlowMeterCalibrationFactor;
+    RaspiPrint("HDI_F1  "); RaspiPrintln(TapWater_Flow,2);
+    RaspiPrint("ARP_F1 ");  RaspiPrintln(AckTank_HeatEx_Flow,2);
+    RaspiPrint("SHO_F1  "); RaspiPrintln(SolHeatEx_Flow,2);
+    currentFlowCount_TapWater_Flow = 0;
+    currentFlowCount_AckTank_HeatEx_Flow = 0; 
+    currentFlowCount_SolHeatEx_Flow = 0;  
     oldFlowConvTime = millis();
   }    
 }
 
+void Sol_CP_Enable(){
+  digitalWrite(Sol_CP, HIGH);
+  if(Sol_CP_State == OFF){ Sol_CP_State = ON; RaspiPrintln("SOL_CP ON"); }
+}
+void Sol_CP_Disable(){
+  digitalWrite(Sol_CP, LOW);
+  if(Sol_CP_State == ON){ Sol_CP_State = OFF; RaspiPrintln("SOL_CP OFF"); }
+}
+
+unsigned long lastHeatEx_CP_State_ON = 0; 
+unsigned long lastHeatEx_CP_State_OFF = 0; 
+
+void HeatEx_CP_Enable(int32_t nutid){
+  HeatEx_TapWater_In_Temp = DallasTemp(HEATEX_DOM_IN_DALLAS);
+  HeatEx_TankWater_Out_Temp = DallasTemp(HEATEX_TANK_OUT_DALLAS);  
+//<- Debug Print ->
+  RaspiDebugPrint("HeatEx_TapWater_In_Temp "); RaspiDebugPrintln(HeatEx_TapWater_In_Temp);
+  RaspiDebugPrint("HeatEx_TankWater_Out_Temp "); RaspiDebugPrintln(HeatEx_TankWater_Out_Temp);
+  if(HeatEx_CP_State == true)
+    RaspiDebugPrintln("HeatEx_CP_State = ON");
+  else
+    RaspiDebugPrintln("HeatEx_CP_State = OFF");
+  RaspiDebugPrint("(lastHeatEx_CP_State_OFF+CPVV_MIN_OFFTIME < nutid) =>  "); RaspiDebugPrintln(lastHeatEx_CP_State_OFF+HeatEx_CP_MIN_OFFTIME < nutid);
+//<- End Debug Print ->
+  if(HeatEx_TapWater_In_Temp < START_TEMP_HEATEX ){
+    if(HeatEx_CP_State==OFF && 
+       (lastHeatEx_CP_State_OFF + HeatEx_CP_MIN_OFFTIME) < nutid
+        && HeatEx_TankWater_Out_Temp < AckTank_Bot_Temp_1 ){
+      digitalWrite(DumpValve, CLOSE);  //onödigt, för den borde redan vara stängd, men men...  
+      digitalWrite(HeatExValve, OPEN);
+      digitalWrite(HeatEx_CP, OPEN);
+      RaspiPrint("HTO_CP ON - "); RaspiPrint(HeatEx_TapWater_In_Temp); RaspiPrint(" "); 
+      RaspiPrint(lastHeatEx_CP_State_OFF);   RaspiPrint(" ");   RaspiPrintln(nutid);
+      HeatEx_CP_State = ON;
+      lastHeatEx_CP_State_ON = nutid;
+      return;
+    }
+    if(HeatEx_CP_State==ON && nutid > lastHeatEx_CP_State_ON + HeatEx_CP_MIN_RUNTIME){
+      if(HeatEx_TankWater_Out_Temp > AckTank_Bot_Temp_1) {   //HeatEx_TapWater_In_Temp + MAX_DIFF_PVV){
+        digitalWrite(DumpValve, CLOSE);
+        digitalWrite(HeatExValve, CLOSE);
+        digitalWrite(HeatEx_CP, CLOSE);
+        lastHeatEx_CP_State_OFF = nutid;
+        HeatEx_CP_State = OFF; RaspiPrintln("HeatEx_CP_State_OFF A");      
+      }
+    }
+  }
+}
+
+void HeatEx_CP_Disable(int32_t nutid){
+  digitalWrite(DumpValve, CLOSE);
+  digitalWrite(HeatExValve, CLOSE);
+  digitalWrite(HeatEx_CP, CLOSE);
+  if(HeatEx_CP_State==ON && nutid > lastHeatEx_CP_State_ON + HeatEx_CP_MIN_RUNTIME){
+    lastHeatEx_CP_State_OFF = nutid; 
+    RaspiPrintln("HeatEx_CP_State OFF B");
+    HeatEx_CP_State = OFF; 
+  }
+}
+
+void LogTapWaterStateChange(){
+  if(TapWater_State == LOW && TapWater_State_LocalVar==ON){
+    RaspiPrintln("TapWater_State_LocalVar OFF");
+    TapWater_State_LocalVar = OFF;
+  }
+  else if (TapWater_State == HIGH && TapWater_State_LocalVar==OFF){
+    RaspiPrintln("TapWater_State_LocalVar ON");
+    TapWater_State_LocalVar = ON;
+  }
+}
+
+/************************************************************************
+ * THE control function
+************************************************************************/
 
 void DoControl(void){
-  TKA_T = DallasTemp(ACK_TANK_LOW_1_DALLAS); 
-  if(TV1SS > (TKA_T + SS_DIFF_START)){
-    digitalWrite(CSS, HIGH);
-    if(!CSS_ON){ CSS_ON = true; RaspiPrintln("SPA_CP ON"); }
-  }
-  else if(TV1SS < (TKA_T + SS_DIFF_STOP)){
-    digitalWrite(CSS, LOW);
-    if(CSS_ON){ CSS_ON = false; RaspiPrintln("SPA_CP OFF"); }
-  }
-/*  if(COM2_NEW_DATA < 1)
-  {
-    // ingen data från taket - NÖDKYL!
-    digitalWrite(CSS, LOW);
-    CSS_ON = false; Serial2.println("SPA_CP OFF - EMERGENCY"); 
-    
-  } 
-  */
-  if(TKA_T > VV_DUMP_OPEN) { 
-    digitalWrite(VVD, HIGH); 
-    digitalWrite(VPVV, HIGH);
-    digitalWrite(CPVV, HIGH);
-     if(!DUMP_OPEN){ RaspiPrintln("HDO_V1 OPEN"); DUMP_OPEN = true;     }
-  }
-  else if ((TKA_T < VV_DUMP_CLOSE) && DUMP_OPEN)  { 
-    digitalWrite(VVD, LOW);
-    digitalWrite(VPVV, LOW);
-    digitalWrite(CPVV, LOW); 
-    RaspiPrintln("HDO_V1 CLOSED"); DUMP_OPEN = false;  // ->|
-  }
-  if(iFVV == LOW && FFV_ON){
-    RaspiPrintln("HDI_S1 OFF");
-    FFV_ON = false;
-  }
-  else if (iFVV == HIGH && !FFV_ON){
-    RaspiPrintln("HDI_S1 ON");
-    FFV_ON = true;
-  }
-  if (!DUMP_OPEN) {
-   CPVV_Enable( iFVV, millis());
-  }
-}
 
-unsigned long lastCPVV_ON; 
-unsigned long lastCPVV_OFF; 
+  AckTank_Bot_Temp_1 = DallasTemp(ACK_TANK_LOW_1_DALLAS); 
+  if(SolarPanel_Out_Temp_1 > (AckTank_Bot_Temp_1 + HeatEx_CP_Temp_Diff_START)){
+    Sol_CP_Enable();   // starta cirkpump
+  }
+  else if(SolarPanel_Out_Temp_1 < (AckTank_Bot_Temp_1 + HeatEx_CP_Temp_Diff_STOP)){
+    Sol_CP_Disable();
+  }
 
-void CPVV_Enable(boolean ON, int32_t nutid){
-  if(ON){
-    TVI_T = DallasTemp(HEATEX_DOM_IN_DALLAS);
-    TDU_T = DallasTemp(HEATEX_TANK_OUT_DALLAS);
-    
-//<- Debug Print ->
-    RaspiDebugPrint("TVI_T "); RaspiDebugPrintln(TVI_T);
-    RaspiDebugPrint("TDU_T "); RaspiDebugPrintln(TDU_T);
-    if(CPVV_ON == true)
-      RaspiDebugPrintln("CPVV_ON = true");
+
+  if(AckTank_Bot_Temp_1 > DUMP_OPEN_TEMP) { 
+    //Acktanken överhettad -KYL
+    digitalWrite(DumpValve, OPEN); 
+    digitalWrite(HeatExValve, OPEN);
+    digitalWrite(HeatEx_CP, OPEN);
+     if(DumpValve_State==IS_CLOSED){ RaspiPrintln("DumpValve OPEN"); DumpValve_State = IS_OPEN;     }
+  }
+  else if ((AckTank_Bot_Temp_1 < DUMP_CLOSE_TEMP) && DumpValve_State == IS_OPEN)  { 
+    digitalWrite(DumpValve, CLOSE);
+    digitalWrite(HeatExValve, CLOSE);
+    digitalWrite(HeatEx_CP, CLOSE); 
+    RaspiPrintln("DumpValve CLOSED"); DumpValve_State = IS_CLOSED; 
+  }
+
+  LogTapWaterStateChange();  //skicka tappvatten på/av till Raspi...
+
+  if (DumpValve_State==IS_CLOSED) {
+    if(TapWater_State == FLOW_EXISTS)
+      HeatEx_CP_Enable(millis());
     else
-      RaspiDebugPrintln("CPVV_ON = false");
-    RaspiDebugPrint("(lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid) =>  "); RaspiDebugPrintln(lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid);
-//<- End Debug Print ->
-
-    if(TVI_T < START_TEMP_PVV ){
-      if(!CPVV_ON && 
-         (lastCPVV_OFF+CPVV_MIN_OFFTIME < nutid)
-          && !(TDU_T > TKA_T) ){
-        digitalWrite(VVD, LOW);  //onödigt, för den borde redan vara stängd, men men...  
-        digitalWrite(VPVV, HIGH);
-        digitalWrite(CPVV, HIGH);
-        RaspiPrint("HTO_CP ON - "); RaspiPrint(TVI_T); RaspiPrint(" "); 
-        RaspiPrint(lastCPVV_OFF);   RaspiPrint(" ");   RaspiPrintln(nutid);
-        CPVV_ON = true;
-        lastCPVV_ON = nutid;
-        return;
-      }
-      if(CPVV_ON && nutid > lastCPVV_ON + CPVV_MIN_RUNTIME){
-        if(TDU_T > TKA_T) {   //TVI_T + MAX_DIFF_PVV){
-          digitalWrite(VVD, LOW);
-          digitalWrite(VPVV, LOW);
-          digitalWrite(CPVV, LOW);
-          lastCPVV_OFF = nutid;
-          CPVV_ON = false; RaspiPrintln("HTO_CP OFF A");      
-        }
-      }
-    }
-  }
-  else{
-    digitalWrite(VVD, LOW);
-    digitalWrite(VPVV, LOW);
-    digitalWrite(CPVV, LOW);
-    if(CPVV_ON && nutid > lastCPVV_ON + CPVV_MIN_RUNTIME){
-
-      lastCPVV_OFF = nutid; 
-      RaspiPrintln("HTO_CP OFF B");
-      CPVV_ON = false; 
-    }
+      HeatEx_CP_Disable(millis());
   }
 }
-
-

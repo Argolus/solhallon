@@ -1,25 +1,25 @@
 /*
 INTERRUPT ROUTINES
 */
-void FlowCounter_FVVB(){
-  FlowCount_FVVB++;
+void FlowCounter_TapWater_Flow(){
+  FlowCount_TapWater_Flow++;
 }
 
-void FlowCounter_FTANK(){
-  FlowCount_FTANK++;
+void FlowCounter_AckTank_HeatEx_Flow(){
+  FlowCount_AckTank_HeatEx_Flow++;
 }
 
-void FlowCounter_FSOL(){
-  FlowCount_FSOL++;
+void FlowCounter_SolHeatEx_Flow(){
+  FlowCount_SolHeatEx_Flow++;
 }
 
 uint32_t tmrCallback(uint32_t currentTime) {
-  currentFlowCount_FVVB = FlowCount_FVVB;
-  FlowCount_FVVB = 0;
-  currentFlowCount_FTANK = FlowCount_FTANK;
-  FlowCount_FTANK = 0;
-  currentFlowCount_FSOL = FlowCount_FSOL;
-  FlowCount_FSOL = 0;
+  currentFlowCount_TapWater_Flow = FlowCount_TapWater_Flow;
+  FlowCount_TapWater_Flow = 0;
+  currentFlowCount_AckTank_HeatEx_Flow = FlowCount_AckTank_HeatEx_Flow;
+  FlowCount_AckTank_HeatEx_Flow = 0;
+  currentFlowCount_SolHeatEx_Flow = FlowCount_SolHeatEx_Flow;
+  FlowCount_SolHeatEx_Flow = 0;
   return (currentTime + CORE_TICK_RATE*1000);
 }
 
@@ -177,9 +177,9 @@ void configureInterrupts(){
   clearIntFlag(_UART4_TX_IRQ);
   clearIntFlag(_UART2_TX_IRQ);
   clearIntFlag(_UART5_TX_IRQ);
-  attachInterrupt(digitalPinToInterrupt(FL_VV_IN), FlowCounter_FVVB, FALLING);
-  attachInterrupt(digitalPinToInterrupt(FL_PVV), FlowCounter_FTANK, FALLING);
-  attachInterrupt(digitalPinToInterrupt(FL_SOL), FlowCounter_FSOL, FALLING);
+  attachInterrupt(digitalPinToInterrupt(FL_VV_IN), FlowCounter_TapWater_Flow, FALLING);
+  attachInterrupt(digitalPinToInterrupt(FL_PVV), FlowCounter_AckTank_HeatEx_Flow, FALLING);
+  attachInterrupt(digitalPinToInterrupt(FL_SOL), FlowCounter_SolHeatEx_Flow, FALLING);
   setIntEnable(_UART1_TX_IRQ);
   setIntEnable(_UART4_TX_IRQ);
   setIntEnable(_UART2_TX_IRQ);

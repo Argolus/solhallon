@@ -71,24 +71,24 @@ void COM_1_pollSerial(){
           }
           switch(SensorIndex(&COM_1_data[3])){
             case SOLAR_OUTLET_COM1:
-              COM_1_TV1SS.setValue(temp);
-//              RaspiPrintln("COM_1 TV1SS"); 
+              COM_1_SolarPanel_Out_Temp_1.setValue(temp);
+//              RaspiPrintln("COM_1 SolarPanel_Out_Temp_1"); 
               break;
             case SOLAR_MID_COM1:
-              COM_1_TM1SS.setValue(temp);
-//              RaspiPrintln("COM_1 TM1SS"); 
+              COM_1_SolarPanel_Mid_Temp.setValue(temp);
+//              RaspiPrintln("COM_1 SolarPanel_Mid_Temp"); 
               break;
             case SOLAR_INLET_COM1:
-              COM_1_TK1SS.setValue(temp);
-//              RaspiPrintln("COM_1 TK1SS"); 
+              COM_1_SolarPanel_In_Temp_1.setValue(temp);
+//              RaspiPrintln("COM_1 SolarPanel_In_Temp_1"); 
               break;
             case EQU_BOX_COM1:
-              COM_1_TA.setValue(temp);
-//              RaspiPrintln("COM_1 TA"); 
+              COM_1_Roof_EqBox_Temp.setValue(temp);
+//              RaspiPrintln("COM_1 Roof_Air_Temp"); 
               break;
             case FREE_AIR_COM1:  
-              COM_1_TU.setValue(temp);
-//              RaspiPrintln("COM_1 TU"); 
+              COM_1_Roof_Air_Temp.setValue(temp);
+//              RaspiPrintln("COM_1 Roof_EqBox_Temp"); 
               break;
             default:
               RaspiDebugPrintln("COM_1 Unknown"); 
