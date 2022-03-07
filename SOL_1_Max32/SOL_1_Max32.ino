@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include "solsidan.h"
 
-const float CURRENT_VERSION = 0.75;
+const float CURRENT_VERSION = 0.80;
 
 /************************************************************************
  *   Initializations
@@ -26,9 +26,14 @@ void setup(void) {
   Serial2.begin(9600); // Tak 2 Arduino på taket, SolarPanel_Out_Temp_1, SolarPanel_Mid_Temp, SolarPanel_In_Temp 1, Roof_EqBox_Temp, Roof_Air_Temp
   Serial3.begin(9600); // Tak 3
   configureInterrupts();
-  RaspiPrint("\n-------\nB3Labz Solhallon version ");
-  RaspiPrint(CURRENT_VERSION);
-  RaspiPrintln("\n-------\n");
+  RaspiPrint("\n-------\nB3Labz\nSolhallon version ");
+  RaspiPrintln(CURRENT_VERSION);
+
+  //RaspiPrint(__FILE__ " " __DATE__ " " __TIME__);
+  RaspiPrintln(__DATE__ " " __TIME__);
+  RaspiPrintln("-------");
+  // RaspiPrint("  IDE "); Serial.println(ARDUINO);
+  // RaspiPrintln("\n-------\n");
   oldFlowConvTime = 0;
   Wire.begin(); // join i2c bus (address optional for master)
   delay(20);
@@ -96,9 +101,9 @@ void ConvertFlow(void){
     TapWater_Flow = currentFlowCount_TapWater_Flow;   // * 60 / FlowMeterCalibrationFactor;
     AckTank_HeatEx_Flow = currentFlowCount_AckTank_HeatEx_Flow; // * 60 / FlowMeterCalibrationFactor;
     SolHeatEx_Flow = currentFlowCount_SolHeatEx_Flow;   // * 60 / FlowMeterCalibrationFactor;
-    RaspiPrint("HDI_F1  "); RaspiPrintln(TapWater_Flow,2);
-    RaspiPrint("ARP_F1 ");  RaspiPrintln(AckTank_HeatEx_Flow,2);
-    RaspiPrint("SHO_F1  "); RaspiPrintln(SolHeatEx_Flow,2);
+    RaspiPrint("TapWater_Flow  "); RaspiPrintln(TapWater_Flow,2);
+    RaspiPrint("AckTank_HeatEx_Flow ");  RaspiPrintln(AckTank_HeatEx_Flow,2);
+    RaspiPrint("SolHeatEx_Flow  "); RaspiPrintln(SolHeatEx_Flow,2);
     currentFlowCount_TapWater_Flow = 0;
     currentFlowCount_AckTank_HeatEx_Flow = 0; 
     currentFlowCount_SolHeatEx_Flow = 0;  
@@ -137,7 +142,7 @@ void HeatEx_CP_Enable(int32_t nutid){
       digitalWrite(DumpValve, CLOSE);  //onödigt, för den borde redan vara stängd, men men...  
       digitalWrite(HeatExValve, OPEN);
       digitalWrite(HeatEx_CP, OPEN);
-      RaspiPrint("HTO_CP ON - "); RaspiPrint(HeatEx_TapWater_In_Temp); RaspiPrint(" "); 
+      RaspiPrint("HeatEx_CP_State ON - "); RaspiPrint(HeatEx_TapWater_In_Temp); RaspiPrint(" "); 
       RaspiPrint(lastHeatEx_CP_State_OFF);   RaspiPrint(" ");   RaspiPrintln(nutid);
       HeatEx_CP_State = ON;
       lastHeatEx_CP_State_ON = nutid;
@@ -149,7 +154,7 @@ void HeatEx_CP_Enable(int32_t nutid){
         digitalWrite(HeatExValve, CLOSE);
         digitalWrite(HeatEx_CP, CLOSE);
         lastHeatEx_CP_State_OFF = nutid;
-        HeatEx_CP_State = OFF; RaspiPrintln("HeatEx_CP_State_OFF A");      
+        HeatEx_CP_State = OFF; RaspiPrintln("HeatEx_CP_State OFF A");      
       }
     }
   }
@@ -168,11 +173,11 @@ void HeatEx_CP_Disable(int32_t nutid){
 
 void LogTapWaterStateChange(){
   if(TapWater_State == LOW && TapWater_State_LocalVar==ON){
-    RaspiPrintln("TapWater_State_LocalVar OFF");
+    RaspiPrintln("TapWater_State OFF");
     TapWater_State_LocalVar = OFF;
   }
   else if (TapWater_State == HIGH && TapWater_State_LocalVar==OFF){
-    RaspiPrintln("TapWater_State_LocalVar ON");
+    RaspiPrintln("TapWater_State ON");
     TapWater_State_LocalVar = ON;
   }
 }

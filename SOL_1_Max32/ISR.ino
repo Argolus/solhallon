@@ -141,6 +141,24 @@ void kick_3() {
     }    
 }
 
+int digitalPinToInterrupt(int pin){
+  int interrupt = -1;
+  switch(pin){
+    case 2:
+      interrupt = 1;
+      break;
+    case 3:
+      interrupt = 0;
+      break;
+    case 7:
+      interrupt = 2;
+      break;
+    default:
+      break;
+  }
+  return interrupt;
+}
+
 void configureInterrupts(){
   attachCoreTimerService(tmrCallback);
 
